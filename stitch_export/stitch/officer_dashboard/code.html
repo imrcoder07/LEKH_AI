@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Noto+Sans:wght@400;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#a3f69c",
+                    "on-tertiary-container": "#5aa958",
+                    "surface-container": "#eeeeee",
+                    "tertiary-container": "#003909",
+                    "on-primary-fixed-variant": "#343d96",
+                    "inverse-primary": "#bdc2ff",
+                    "surface": "#f9f9f9",
+                    "primary-fixed-dim": "#bdc2ff",
+                    "secondary-fixed-dim": "#b4cad6",
+                    "secondary-container": "#cfe6f2",
+                    "outline": "#767683",
+                    "inverse-on-surface": "#f1f1f1",
+                    "primary": "#000666",
+                    "surface-bright": "#f9f9f9",
+                    "inverse-surface": "#2f3131",
+                    "outline-variant": "#c6c5d4",
+                    "surface-tint": "#4c56af",
+                    "surface-container-highest": "#e2e2e2",
+                    "surface-variant": "#e2e2e2",
+                    "on-surface": "#1a1c1c",
+                    "on-primary": "#ffffff",
+                    "tertiary-fixed-dim": "#88d982",
+                    "primary-fixed": "#e0e0ff",
+                    "surface-container-low": "#f3f3f3",
+                    "on-secondary-container": "#526772",
+                    "on-secondary": "#ffffff",
+                    "on-surface-variant": "#454652",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#dadada",
+                    "on-secondary-fixed": "#071e27",
+                    "on-background": "#1a1c1c",
+                    "on-primary-fixed": "#000767",
+                    "on-tertiary-fixed": "#002204",
+                    "secondary-fixed": "#cfe6f2",
+                    "surface-container-high": "#e8e8e8",
+                    "on-secondary-fixed-variant": "#354a53",
+                    "background": "#f9f9f9",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#002103",
+                    "error": "#ba1a1a",
+                    "error-container": "#ffdad6",
+                    "on-primary-container": "#8690ee",
+                    "on-tertiary": "#ffffff",
+                    "primary-container": "#1a237e",
+                    "secondary": "#4c616c",
+                    "on-tertiary-fixed-variant": "#005312"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bilingual-header {
+            display: flex;
+            flex-direction: column;
+        }
+        .hindi-text {
+            font-family: 'Noto Sans', sans-serif;
+            font-size: 110%;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-white">
+<!-- TopNavBar -->
+<nav class="bg-[#F9F9F9] dark:bg-slate-900 flex justify-between items-center w-full px-8 py-4 max-w-full mx-auto fixed top-0 z-50">
+<div class="text-2xl font-black tracking-tighter text-[#000666] dark:text-white">LekhAI</div>
+<div class="hidden md:flex items-center space-x-8">
+<a class="text-slate-500 dark:text-slate-400 font-['Inter'] font-semibold tracking-tight text-[1rem] hover:text-[#1A237E] dark:hover:text-blue-300 transition-colors" href="#">Dashboard</a>
+<a class="text-[#000666] dark:text-white border-b-2 border-[#000666] pb-1 font-['Inter'] font-semibold tracking-tight text-[1rem]" href="#">OCR Verify</a>
+<a class="text-slate-500 dark:text-slate-400 font-['Inter'] font-semibold tracking-tight text-[1rem] hover:text-[#1A237E] dark:hover:text-blue-300 transition-colors" href="#">Public Search</a>
+</div>
+<div class="flex items-center space-x-4">
+<button class="bg-primary text-white px-5 py-2 rounded-lg font-semibold text-sm hover:scale-95 duration-200 transition-all">Citizen Login</button>
+<button class="text-slate-500 hover:text-primary transition-colors"><span class="material-symbols-outlined">translate</span></button>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="bg-[#FFFFFF] dark:bg-slate-800 flex flex-col h-screen py-6 px-4 space-y-2 fixed left-0 top-0 w-64 shadow-[-20px_0px_40px_rgba(26,35,126,0.08)] pt-20">
+<div class="mb-8 px-2">
+<div class="flex items-center space-x-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center overflow-hidden">
+<img alt="Officer Profile" data-alt="professional portrait of a government official in formal attire clean bright lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYDjZEOVel_TGQ4qKR-NCvkpLQaiDAYj-7SaqGBGCM7eU3FGhxS41j-GPDg8JFr5CkC5pntJo9pLXE1li-nUQeH0IhzApqytPEVkkmwf0iruo-FAIOEBYGy2H2XhnTFWeJWepIxjA8gxIgVuzLnYVZDzqKKoPwnc0hqDEdpNuh-ioJaBQ0UuBpEkdFJoziYUEYXl4yb4wHbm2ooYQ912hwkk1ErdIdMHwlG1aOaA8-cyAcdo4A_5mB3zcysTSHyNvNf3tOA3l0f7I"/>
+</div>
+<div>
+<p class="font-['Inter'] font-bold text-[#000666] text-sm">Officer Dashboard</p>
+<p class="font-['Inter'] text-xs text-slate-500">Verification Authority</p>
+</div>
+</div>
+<button class="w-full bg-[#1A237E] text-white py-3 rounded-lg shadow-lg font-bold flex items-center justify-center space-x-2 transition-all duration-300 hover:scale-95">
+<span class="material-symbols-outlined text-sm">add</span>
+<span>New Verification</span>
+</button>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center space-x-3 px-3 py-3 text-slate-600 dark:text-slate-400 font-['Inter'] font-medium text-[0.875rem] hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-[#000666] rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">folder_open</span>
+<span>Records Overview</span>
+</a>
+<a class="flex items-center space-x-3 px-3 py-3 bg-[#1A237E] text-white rounded-lg shadow-lg font-bold text-[0.875rem]" href="#">
+<span class="material-symbols-outlined">fact_check</span>
+<span>Verification Queue</span>
+</a>
+<a class="flex items-center space-x-3 px-3 py-3 text-slate-600 dark:text-slate-400 font-['Inter'] font-medium text-[0.875rem] hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-[#000666] rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<span>PII Management</span>
+</a>
+<a class="flex items-center space-x-3 px-3 py-3 text-slate-600 dark:text-slate-400 font-['Inter'] font-medium text-[0.875rem] hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-[#000666] rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">history_edu</span>
+<span>Audit Logs</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 px-10 pb-12 min-h-screen">
+<header class="mb-12">
+<h1 class="text-[3.5rem] font-extrabold tracking-tight text-primary leading-none mb-2">Ingestion Flow</h1>
+<p class="text-on-surface-variant font-medium flex items-center">
+<span class="hindi-text mr-2">दस्तावेज़ अंतर्ग्रहण</span>
+<span class="opacity-50">/ Document Ingestion Portal</span>
+</p>
+</header>
+<div class="grid grid-cols-12 gap-8">
+<!-- Upload Zone: Bento Main -->
+<div class="col-span-12 lg:col-span-8 space-y-8">
+<div class="bg-surface-container-lowest rounded-xl p-12 flex flex-col items-center justify-center border-2 border-dashed border-outline-variant hover:border-surface-tint transition-colors group cursor-pointer min-h-[450px]">
+<div class="w-24 h-24 rounded-full bg-secondary-container flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-primary text-4xl">cloud_upload</span>
+</div>
+<div class="text-center space-y-4">
+<div class="bilingual-header items-center">
+<h2 class="text-2xl font-bold text-primary">Upload Land Deed</h2>
+<span class="hindi-text text-xl text-primary opacity-70">भूमि विलेख अपलोड करें</span>
+</div>
+<p class="text-on-surface-variant max-w-sm mx-auto">Drag and drop high-resolution scans of the physical deed or select from local storage.</p>
+<button class="mt-4 bg-gradient-to-br from-primary to-primary-container text-white px-8 py-4 rounded-lg font-bold shadow-lg flex items-center space-x-3 hover:scale-[0.98] transition-all">
+<span class="material-symbols-outlined">image</span>
+<span>SELECT DEED FILE</span>
+</button>
+<div class="flex items-center justify-center space-x-6 pt-6 opacity-40">
+<div class="flex items-center space-x-2"><span class="material-symbols-outlined text-sm">picture_as_pdf</span><span class="text-xs font-bold tracking-widest">PDF</span></div>
+<div class="flex items-center space-x-2"><span class="material-symbols-outlined text-sm">image</span><span class="text-xs font-bold tracking-widest">JPEG</span></div>
+<div class="flex items-center space-x-2"><span class="material-symbols-outlined text-sm">description</span><span class="text-xs font-bold tracking-widest">PNG</span></div>
+</div>
+</div>
+</div>
+<!-- Recent Activity / Tonal Layering -->
+<div class="bg-surface-container-low rounded-xl p-8">
+<h3 class="font-bold text-lg mb-6 flex items-center">
+<span class="material-symbols-outlined mr-2">history</span>
+                        Recent Ingestions
+                    </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-surface-container-lowest p-4 rounded-lg flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 bg-tertiary-fixed rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-fixed">verified</span>
+</div>
+<div>
+<p class="text-sm font-bold text-primary">DEED-009821</p>
+<p class="text-[0.7rem] uppercase tracking-tighter text-slate-500">Processed 12m ago</p>
+</div>
+</div>
+<span class="text-xs font-bold text-on-tertiary-container bg-tertiary-fixed/30 px-2 py-1 rounded">VALID</span>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-lg flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 bg-error-container rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-error">warning</span>
+</div>
+<div>
+<p class="text-sm font-bold text-primary">DEED-009819</p>
+<p class="text-[0.7rem] uppercase tracking-tighter text-slate-500">Processed 45m ago</p>
+</div>
+</div>
+<span class="text-xs font-bold text-error bg-error-container/30 px-2 py-1 rounded">MISMATCH</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar: Processing View -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<!-- Confidence Gauge -->
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[-20px_0px_40px_rgba(26,35,126,0.04)]">
+<h3 class="text-xs font-bold tracking-widest text-slate-400 uppercase mb-6">OCR Confidence Analytics</h3>
+<div class="flex items-end justify-between mb-2">
+<span class="text-5xl font-black text-primary tracking-tighter">0.95</span>
+<span class="text-on-tertiary-container font-bold mb-1 flex items-center">
+<span class="material-symbols-outlined text-sm mr-1">trending_up</span>
+                            Optimal
+                        </span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-3 mb-6 overflow-hidden">
+<div class="bg-gradient-to-r from-primary to-tertiary-fixed h-full" style="width: 95%;"></div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-3 bg-surface-container-low rounded">
+<p class="text-[0.65rem] font-bold text-slate-500 uppercase">Text Clarity</p>
+<p class="text-lg font-bold text-primary">0.98</p>
+</div>
+<div class="p-3 bg-surface-container-low rounded">
+<p class="text-[0.65rem] font-bold text-slate-500 uppercase">Stamp Match</p>
+<p class="text-lg font-bold text-primary">0.92</p>
+</div>
+</div>
+</div>
+<!-- Extraction Preview -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[-20px_0px_40px_rgba(26,35,126,0.04)] h-[500px] flex flex-col">
+<div class="p-6 bg-primary text-white flex items-center justify-between">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-lg">code</span>
+<span class="text-sm font-bold tracking-tight">JSON Extraction</span>
+</div>
+<span class="text-[0.65rem] bg-white/20 px-2 py-1 rounded">REAL-TIME</span>
+</div>
+<div class="p-6 font-mono text-[0.8rem] text-slate-700 overflow-y-auto no-scrollbar bg-surface-container-low/50 flex-grow">
+<pre>{
+  "document_id": "LD-2024-883",
+  "district": "JAIPUR",
+  "tehsil": "SANGANER",
+  "grantor": {
+    "name": "Rajesh Kumar",
+    "verification": "AADHAAR_LINKED",
+    "status": "Verified"
+  },
+  "grantee": {
+    "name": "Sita Devi",
+    "verification": "BIOMETRIC_MATCH"
+  },
+  "asset": {
+    "khasra_no": "442/1",
+    "area_sqmt": 1250.00,
+    "classification": "RESIDENTIAL"
+  },
+  "hash_signature": "0x4f2...e9a1",
+  "blockchain_status": "PENDING_BLOCK"
+}
+</pre>
+</div>
+<div class="p-4 border-t border-slate-100 bg-white">
+<button class="w-full bg-secondary-container text-on-secondary-container py-3 rounded font-bold text-xs hover:bg-opacity-80 transition-all uppercase tracking-widest">
+                            Review Raw Extraction
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-[#F9F9F9] dark:bg-slate-950 w-full flex flex-col md:flex-row justify-between items-center px-12 py-12 border-t border-slate-100 dark:border-slate-800">
+<p class="font-['Inter'] text-[0.75rem] uppercase tracking-widest text-slate-500 dark:text-slate-500">© 2024 LekhAI Digital Ledger. Immutable Authority.</p>
+<div class="flex space-x-8 mt-6 md:mt-0">
+<a class="text-slate-500 dark:text-slate-500 font-['Inter'] text-[0.75rem] uppercase tracking-widest hover:text-black dark:hover:text-white transition-all opacity-80 hover:opacity-100" href="#">Privacy Policy</a>
+<a class="text-slate-500 dark:text-slate-500 font-['Inter'] text-[0.75rem] uppercase tracking-widest hover:text-black dark:hover:text-white transition-all opacity-80 hover:opacity-100" href="#">Terms of Service</a>
+<a class="text-slate-500 dark:text-slate-500 font-['Inter'] text-[0.75rem] uppercase tracking-widest hover:text-black dark:hover:text-white transition-all opacity-80 hover:opacity-100 underline text-[#000666] dark:text-white" href="#">Security Whitepaper</a>
+</div>
+</footer>
+</body></html>

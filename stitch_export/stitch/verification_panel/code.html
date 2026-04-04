@@ -1,0 +1,249 @@
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Noto+Sans:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+                  "tertiary-fixed": "#a3f69c",
+                  "on-tertiary-container": "#5aa958",
+                  "surface-container": "#eeeeee",
+                  "tertiary-container": "#003909",
+                  "on-primary-fixed-variant": "#343d96",
+                  "inverse-primary": "#bdc2ff",
+                  "surface": "#f9f9f9",
+                  "primary-fixed-dim": "#bdc2ff",
+                  "secondary-fixed-dim": "#b4cad6",
+                  "secondary-container": "#cfe6f2",
+                  "outline": "#767683",
+                  "inverse-on-surface": "#f1f1f1",
+                  "primary": "#000666",
+                  "surface-bright": "#f9f9f9",
+                  "inverse-surface": "#2f3131",
+                  "outline-variant": "#c6c5d4",
+                  "surface-tint": "#4c56af",
+                  "surface-container-highest": "#e2e2e2",
+                  "surface-variant": "#e2e2e2",
+                  "on-surface": "#1a1c1c",
+                  "on-primary": "#ffffff",
+                  "tertiary-fixed-dim": "#88d982",
+                  "primary-fixed": "#e0e0ff",
+                  "surface-container-low": "#f3f3f3",
+                  "on-secondary-container": "#526772",
+                  "on-secondary": "#ffffff",
+                  "on-surface-variant": "#454652",
+                  "on-error": "#ffffff",
+                  "surface-dim": "#dadada",
+                  "on-secondary-fixed": "#071e27",
+                  "on-background": "#1a1c1c",
+                  "on-primary-fixed": "#000767",
+                  "on-tertiary-fixed": "#002204",
+                  "secondary-fixed": "#cfe6f2",
+                  "surface-container-high": "#e8e8e8",
+                  "on-secondary-fixed-variant": "#354a53",
+                  "background": "#f9f9f9",
+                  "surface-container-lowest": "#ffffff",
+                  "on-error-container": "#93000a",
+                  "tertiary": "#002103",
+                  "error": "#ba1a1a",
+                  "error-container": "#ffdad6",
+                  "on-primary-container": "#8690ee",
+                  "on-tertiary": "#ffffff",
+                  "primary-container": "#1a237e",
+                  "secondary": "#4c616c",
+                  "on-tertiary-fixed-variant": "#005312"
+          },
+          "borderRadius": {
+                  "DEFAULT": "0.125rem",
+                  "lg": "0.25rem",
+                  "xl": "0.5rem",
+                  "full": "0.75rem"
+          },
+          "fontFamily": {
+                  "headline": ["Inter"],
+                  "body": ["Inter"],
+                  "label": ["Inter"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .record-valid-pulse {
+      box-shadow: 0 0 0 0 rgba(163, 246, 156, 0.7);
+      animation: pulse-green 2s infinite;
+    }
+    @keyframes pulse-green {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(163, 246, 156, 0.7); }
+      70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(163, 246, 156, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(163, 246, 156, 0); }
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body min-h-screen">
+<nav class="bg-[#F9F9F9] dark:bg-slate-900 flex justify-between items-center w-full px-8 py-4 max-w-full mx-auto fixed top-0 z-50">
+<div class="text-2xl font-black tracking-tighter text-[#000666] dark:text-white">LekhAI</div>
+<div class="hidden md:flex space-x-8 items-center">
+<a class="font-['Inter'] font-semibold tracking-tight text-[1rem] text-slate-500 dark:text-slate-400 hover:text-[#1A237E] transition-colors" href="#">Dashboard</a>
+<a class="font-['Inter'] font-semibold tracking-tight text-[1rem] text-[#000666] dark:text-white border-b-2 border-[#000666] pb-1" href="#">OCR Verify</a>
+<a class="font-['Inter'] font-semibold tracking-tight text-[1rem] text-slate-500 dark:text-slate-400 hover:text-[#1A237E] transition-colors" href="#">Public Search</a>
+</div>
+<div class="flex items-center space-x-4">
+<button class="px-4 py-2 text-sm font-bold text-[#000666] border border-[#000666] rounded-lg">Bilingual Toggle</button>
+<button class="px-4 py-2 text-sm font-bold bg-[#000666] text-white rounded-lg">Citizen Login</button>
+</div>
+</nav>
+<aside class="bg-[#FFFFFF] dark:bg-slate-800 fixed left-0 top-0 h-screen w-64 flex flex-col py-6 px-4 space-y-2 mt-[72px] shadow-[-20px_0px_40px_rgba(26,35,126,0.08)] hidden md:flex">
+<div class="mb-8 px-2">
+<div class="flex items-center space-x-3 mb-2">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="professional portrait of a government official in a sharp suit with neutral lighting and minimalist background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHsKOtm1Sl0IXt8JIY0RIVqvJ2mOfjFuFFj-M4TzYf0QaIx994wXkz1JYifQAbcc4V89tMPy8u1qL6tgsRtQYLkDwzoKUb-t5J13HvRoRTeUEK5JFYOt9-yRfNSQm8rS-7321S4Gp8MU5b2kk7NYe_IBOjLpx1yPiWl6d6QeBuhQ_G40GUam2emzdxiT2csMqfm7M6pIHN5ieUUEsKX27yAP_nM9d-7XzYNmBeeHRdty9v7AOFwhJsu5CiZbvGgn9uiNfMDgNIXyw"/>
+</div>
+<div>
+<p class="text-[0.875rem] font-bold text-[#000666]">Officer Dashboard</p>
+<p class="text-[0.7rem] text-slate-500">Verification Authority</p>
+</div>
+</div>
+</div>
+<a class="flex items-center space-x-3 p-3 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-[#000666] transition-all" href="#">
+<span class="material-symbols-outlined">folder_open</span>
+<span class="font-medium text-[0.875rem]">Records Overview</span>
+</a>
+<a class="flex items-center space-x-3 p-3 rounded-lg bg-[#1A237E] text-white shadow-lg font-bold transition-all" href="#">
+<span class="material-symbols-outlined">fact_check</span>
+<span class="font-medium text-[0.875rem]">Verification Queue</span>
+</a>
+<a class="flex items-center space-x-3 p-3 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-[#000666] transition-all" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<span class="font-medium text-[0.875rem]">PII Management</span>
+</a>
+<a class="flex items-center space-x-3 p-3 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-[#000666] transition-all" href="#">
+<span class="material-symbols-outlined">history_edu</span>
+<span class="font-medium text-[0.875rem]">Audit Logs</span>
+</a>
+<div class="pt-8">
+<button class="w-full py-3 bg-[#1A237E] text-white rounded-lg font-bold text-sm flex items-center justify-center space-x-2">
+<span class="material-symbols-outlined">add</span>
+<span>New Verification</span>
+</button>
+</div>
+</aside>
+<main class="md:ml-64 mt-[72px] p-8 max-w-7xl mx-auto">
+<header class="mb-12">
+<div class="flex items-baseline space-x-4">
+<h1 class="text-[3.5rem] font-extrabold tracking-tight text-primary leading-none uppercase">OCR Verify</h1>
+<h1 class="text-[3.8rem] font-bold text-primary leading-none font-['Noto_Sans']">ओसीआर सत्यापन</h1>
+</div>
+<p class="text-on-surface-variant mt-2 max-w-2xl text-[1rem]">Digital Ledger Audit: Comparing physical deed scans with extracted metadata for final immutable registration.</p>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+<div class="bg-surface-container-low px-6 py-4 flex justify-between items-center">
+<span class="text-[0.75rem] font-bold tracking-widest text-primary uppercase">Original Document Scan</span>
+<div class="flex space-x-2">
+<button class="p-2 hover:bg-surface-variant rounded"><span class="material-symbols-outlined text-sm">zoom_in</span></button>
+<button class="p-2 hover:bg-surface-variant rounded"><span class="material-symbols-outlined text-sm">zoom_out</span></button>
+<button class="p-2 hover:bg-surface-variant rounded"><span class="material-symbols-outlined text-sm">rotate_right</span></button>
+</div>
+</div>
+<div class="p-6 bg-surface-container aspect-[3/4] relative overflow-auto">
+<div class="min-w-full bg-white shadow-2xl p-8 border border-outline-variant/10">
+<img class="w-full opacity-90" data-alt="high-resolution scan of an official legal document with intricate patterns, official stamps, and handwritten signatures on aged parchment paper" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcx2g9gS9jAC-bB5Xt1z7JTmxXJLK12NCLX1cueg2VNuUuGT2kpTk0CEB3tFAg29bSwc7jFc_17foUvNqZP5VycnzkHm6kdPKOYRHNGYHDH-xnEvxTWEWHEH1e_v-9RMgXM-wiZKj5sNaUKvWIp2VUZVH1SxP4PfsE6RbZSiTly1cukdy8lbZjcy_C3o3HjuZadWnbOGqO7LRhFKlkZ14pEQLxhfkkSjlHxEO9PB7Uq_3XLJVd9QbJJXdoWgNCmnXsxQ6ewHuauro"/>
+<div class="absolute top-[15%] left-[20%] w-[40%] h-8 border-2 border-error/50 bg-error/5 flex items-center justify-center">
+<span class="text-[0.6rem] bg-error text-white px-1 absolute -top-4 left-0">LOW CONFIDENCE</span>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-8">
+<div class="bg-surface-container-lowest p-8 rounded-xl">
+<div class="flex justify-between items-center mb-8">
+<h2 class="text-[1.75rem] font-bold text-primary">Extracted Metadata</h2>
+<div class="bg-tertiary-container text-tertiary-fixed px-4 py-1 rounded-full text-xs font-bold record-valid-pulse flex items-center space-x-2">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed"></span>
+<span>LIVE SYNC ACTIVE</span>
+</div>
+</div>
+<div class="space-y-6">
+<div class="space-y-2">
+<label class="block">
+<span class="text-[0.75rem] font-bold text-outline uppercase tracking-widest block">ULPIN / पिन नंबर</span>
+</label>
+<div class="relative">
+<input class="w-full bg-surface-container-highest border-none p-4 font-mono font-bold text-primary focus:ring-0" type="text" value="IND-KA-BNG-2024-8891"/>
+<div class="absolute bottom-0 left-0 w-full h-[2px] bg-surface-tint"></div>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center text-on-tertiary-container">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-[0.7rem] font-bold ml-1">0.98</span>
+</div>
+</div>
+</div>
+<div class="space-y-2 p-4 bg-error/5 border-l-4 border-error rounded-r-lg">
+<label class="block">
+<span class="text-[0.75rem] font-bold text-error uppercase tracking-widest block">Owner Name / मालिक का नाम</span>
+</label>
+<div class="relative">
+<input class="w-full bg-white border-none p-4 font-bold text-on-surface focus:ring-0" type="text" value="RAGHUVANSHI, PRAKASH"/>
+<div class="absolute bottom-0 left-0 w-full h-[2px] bg-error"></div>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center text-error">
+<span class="material-symbols-outlined text-lg">warning</span>
+<span class="text-[0.7rem] font-bold ml-1">0.72</span>
+</div>
+</div>
+<p class="text-[0.75rem] text-error font-medium italic">High variance detected in character recognition. Manual correction required.</p>
+</div>
+<div class="space-y-2">
+<label class="block">
+<span class="text-[0.75rem] font-bold text-outline uppercase tracking-widest block">Area (Sq. Ft) / क्षेत्रफल</span>
+</label>
+<div class="relative">
+<input class="w-full bg-surface-container-highest border-none p-4 font-bold text-primary focus:ring-0" type="text" value="2,450.50"/>
+<div class="absolute bottom-0 left-0 w-full h-[2px] bg-surface-tint"></div>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center text-on-tertiary-container">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-[0.7rem] font-bold ml-1">0.94</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-12 flex flex-col sm:flex-row gap-4">
+<button class="flex-1 py-4 bg-secondary-container text-on-secondary-container font-bold rounded-lg flex items-center justify-center space-x-3 transition-transform hover:scale-[1.02]">
+<span class="material-symbols-outlined">edit_note</span>
+<span>Verify Title Matches</span>
+</button>
+<button class="flex-1 py-4 bg-tertiary-fixed text-on-tertiary-fixed font-bold rounded-lg flex items-center justify-center space-x-3 transition-transform hover:scale-[1.02] shadow-lg">
+<span class="material-symbols-outlined">verified_user</span>
+<span>Generate 65B Certificate</span>
+</button>
+</div>
+</div>
+<div class="bg-tertiary-container p-6 rounded-xl border-l-8 border-tertiary-fixed flex items-center justify-between">
+<div>
+<h3 class="text-tertiary-fixed font-bold text-lg">Integrity Check Passed</h3>
+<p class="text-on-tertiary-container text-sm">Blockchain hash synchronization successful. Ready for ledger entry.</p>
+</div>
+<div class="w-12 h-12 bg-tertiary-fixed rounded-full flex items-center justify-center record-valid-pulse">
+<span class="material-symbols-outlined text-tertiary text-2xl" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="w-full flex flex-col md:flex-row justify-between items-center px-12 py-12 bg-[#F9F9F9] dark:bg-slate-950 border-t border-slate-100 dark:border-slate-800 mt-20">
+<p class="font-['Inter'] text-[0.75rem] uppercase tracking-widest text-slate-600 dark:text-slate-400">© 2024 LekhAI Digital Ledger. Immutable Authority.</p>
+<div class="flex space-x-8 mt-6 md:mt-0">
+<a class="font-['Inter'] text-[0.75rem] uppercase tracking-widest text-slate-500 hover:text-black dark:hover:text-white transition-opacity opacity-80 hover:opacity-100" href="#">Privacy Policy</a>
+<a class="font-['Inter'] text-[0.75rem] uppercase tracking-widest text-slate-500 hover:text-black dark:hover:text-white transition-opacity opacity-80 hover:opacity-100" href="#">Terms of Service</a>
+<a class="font-['Inter'] text-[0.75rem] uppercase tracking-widest text-slate-500 hover:text-black dark:hover:text-white transition-opacity opacity-80 hover:opacity-100" href="#">Security Whitepaper</a>
+</div>
+</footer>
+</body></html>

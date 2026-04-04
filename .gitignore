@@ -1,0 +1,40 @@
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# Environment & Secrets
+.env
+*.key
+
+# OCR model caches (auto-downloaded, never deploy)
+.paddleocr/
+.EasyOCR/
+~/.cache/
+
+# Temp build / IDE tools
+.codex_tmp/
+pip-build-tracker-*/
+pip-ephem-wheel-cache-*/
+pip-install-*/
+
+# Uploads (temp processing files — DPDP: never commit)
+uploads/
+
+# IDE
+.vscode/
+.idea/
+*.suo
+*.user
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

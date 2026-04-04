@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Noto+Sans:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#a3f69c",
+                    "on-tertiary-container": "#5aa958",
+                    "surface-container": "#eeeeee",
+                    "tertiary-container": "#003909",
+                    "on-primary-fixed-variant": "#343d96",
+                    "inverse-primary": "#bdc2ff",
+                    "surface": "#f9f9f9",
+                    "primary-fixed-dim": "#bdc2ff",
+                    "secondary-fixed-dim": "#b4cad6",
+                    "secondary-container": "#cfe6f2",
+                    "outline": "#767683",
+                    "inverse-on-surface": "#f1f1f1",
+                    "primary": "#000666",
+                    "surface-bright": "#f9f9f9",
+                    "inverse-surface": "#2f3131",
+                    "outline-variant": "#c6c5d4",
+                    "surface-tint": "#4c56af",
+                    "surface-container-highest": "#e2e2e2",
+                    "surface-variant": "#e2e2e2",
+                    "on-surface": "#1a1c1c",
+                    "on-primary": "#ffffff",
+                    "tertiary-fixed-dim": "#88d982",
+                    "primary-fixed": "#e0e0ff",
+                    "surface-container-low": "#f3f3f3",
+                    "on-secondary-container": "#526772",
+                    "on-secondary": "#ffffff",
+                    "on-surface-variant": "#454652",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#dadada",
+                    "on-secondary-fixed": "#071e27",
+                    "on-background": "#1a1c1c",
+                    "on-primary-fixed": "#000767",
+                    "on-tertiary-fixed": "#002204",
+                    "secondary-fixed": "#cfe6f2",
+                    "surface-container-high": "#e8e8e8",
+                    "on-secondary-fixed-variant": "#354a53",
+                    "background": "#f9f9f9",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#002103",
+                    "error": "#ba1a1a",
+                    "error-container": "#ffdad6",
+                    "on-primary-container": "#8690ee",
+                    "on-tertiary": "#ffffff",
+                    "primary-container": "#1a237e",
+                    "secondary": "#4c616c",
+                    "on-tertiary-fixed-variant": "#005312"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hindi-text { font-family: 'Noto Sans', sans-serif; }
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            background-color: rgba(249, 249, 249, 0.8);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface overflow-x-hidden">
+<!-- DPDP 2025 Consent Modal (Overlay) -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center bg-primary/40 backdrop-blur-md p-4">
+<div class="bg-surface-container-lowest max-w-2xl w-full rounded-xl shadow-[0px_20px_40px_rgba(26,35,126,0.12)] overflow-hidden border border-outline-variant/20">
+<div class="p-8 space-y-6">
+<div class="flex items-center gap-4">
+<div class="bg-secondary-container p-3 rounded-full text-on-secondary-container">
+<span class="material-symbols-outlined">gavel</span>
+</div>
+<div>
+<h2 class="text-xl font-bold tracking-tight text-primary uppercase">Notice &amp; Consent</h2>
+<p class="hindi-text text-lg font-bold text-primary">सूचना एवं सहमति</p>
+</div>
+</div>
+<div class="space-y-4 text-on-surface-variant leading-relaxed">
+<p class="text-sm">In compliance with <strong>DPDP Rules 2025</strong>, LekhAI requires your explicit consent to process your search query. We use PII masking for public records and log every interaction for audit trails.</p>
+<p class="hindi-text text-base">DPDP नियम 2025 के अनुपालन में, LekhAI को आपकी खोज को संसाधित करने के लिए आपकी स्पष्ट सहमति की आवश्यकता है।</p>
+<div class="bg-surface-container-low p-4 rounded-lg space-y-2">
+<div class="flex items-start gap-3">
+<input class="mt-1 rounded border-outline-variant text-primary focus:ring-primary" id="consent-1" type="checkbox"/>
+<label class="text-xs" for="consent-1">I understand that my IP address and search intent will be logged in the immutable audit ledger. <span class="hindi-text block font-medium">मैं समझता हूँ कि मेरा आईपी पता और खोज उद्देश्य ऑडिट लेज़र में दर्ज किया जाएगा।</span></label>
+</div>
+<div class="flex items-start gap-3">
+<input class="mt-1 rounded border-outline-variant text-primary focus:ring-primary" id="consent-2" type="checkbox"/>
+<label class="text-xs" for="consent-2">I agree to use this information solely for legal verification purposes. <span class="hindi-text block font-medium">मैं इस जानकारी का उपयोग केवल कानूनी सत्यापन उद्देश्यों के लिए करने हेतु सहमत हूँ।</span></label>
+</div>
+</div>
+</div>
+<div class="flex flex-col md:flex-row gap-4 pt-4">
+<button class="flex-1 bg-primary text-white py-4 rounded-lg font-bold text-sm tracking-widest uppercase hover:bg-primary-container transition-all">Accept &amp; Proceed</button>
+<button class="flex-1 bg-surface-container-highest text-on-surface-variant py-4 rounded-lg font-bold text-sm tracking-widest uppercase hover:bg-outline-variant transition-all">Decline</button>
+</div>
+</div>
+</div>
+</div>
+<!-- TopNavBar -->
+<nav class="sticky top-0 z-50 glass-nav flex justify-between items-center w-full px-8 py-4 max-w-full mx-auto">
+<div class="text-2xl font-black tracking-tighter text-[#000666]">LekhAI</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-slate-500 font-['Inter'] font-semibold tracking-tight text-[1rem] hover:text-[#1A237E] transition-colors" href="#">Dashboard</a>
+<a class="text-slate-500 font-['Inter'] font-semibold tracking-tight text-[1rem] hover:text-[#1A237E] transition-colors" href="#">OCR Verify</a>
+<a class="text-[#000666] font-['Inter'] font-semibold tracking-tight text-[1rem] border-b-2 border-[#000666] pb-1" href="#">Public Search</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-primary font-bold text-xs uppercase tracking-widest px-4 py-2 rounded-full border border-outline-variant hover:bg-surface-container-low transition-all">Bilingual Toggle</button>
+<button class="bg-primary text-white px-6 py-2 rounded-full font-bold text-sm tracking-tight shadow-lg hover:scale-95 duration-200">Citizen Login</button>
+</div>
+</nav>
+<main class="max-w-7xl mx-auto px-8 py-12">
+<!-- Hero Search Section -->
+<header class="mb-16">
+<h1 class="text-[3.5rem] font-extrabold tracking-tighter leading-none text-primary mb-2">Digital Ledger Search</h1>
+<h2 class="hindi-text text-3xl font-bold text-primary opacity-60 mb-8">डिजिटल लेजर खोज</h2>
+<div class="bg-surface-container-lowest p-2 rounded-full shadow-[0px_20px_40px_rgba(26,35,126,0.06)] flex items-center max-w-3xl border border-outline-variant/10">
+<div class="pl-6 text-outline">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-on-surface py-4 px-4 font-medium placeholder:text-outline/50" placeholder="Search by Deed Number, Property ID, or Owner Name..." type="text"/>
+<button class="bg-primary text-white px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-primary-container transition-all">Execute Search</button>
+</div>
+</header>
+<!-- Bento Grid Results -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Main Result Card (Verified) -->
+<div class="lg:col-span-8 bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_10px_30px_rgba(0,0,0,0.02)] flex flex-col">
+<div class="p-8 space-y-8">
+<div class="flex justify-between items-start">
+<div class="space-y-1">
+<span class="text-[0.75rem] font-bold uppercase tracking-widest text-outline">Deed Registry #882/2024</span>
+<h3 class="text-2xl font-bold text-primary">Royal Orchid Estates, Sector 45</h3>
+<p class="hindi-text text-lg text-primary/70">रॉयल ऑर्किड एस्टेट्स, सेक्टर 45</p>
+</div>
+<!-- Integrity Badge -->
+<div class="flex items-center gap-2 bg-tertiary-fixed text-on-tertiary-fixed px-4 py-2 rounded-full cursor-pointer hover:scale-105 transition-transform group relative">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="text-xs font-bold uppercase tracking-tighter">Integrity Verified</span>
+<!-- Tooltip/Hover Hash Info -->
+<div class="absolute top-full right-0 mt-2 w-64 bg-primary p-4 rounded-lg text-white opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 shadow-xl">
+<p class="text-[10px] uppercase opacity-60 mb-1">SHA-256 Hash Chain</p>
+<p class="font-mono text-[9px] break-all">f7e8a9c...0d2e4f5a1b2c3d4e5f6</p>
+<div class="mt-2 pt-2 border-t border-white/10 flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-tertiary-fixed animate-pulse"></div>
+<p class="text-[9px]">Last validated: 2 mins ago</p>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+<div>
+<span class="text-[0.65rem] font-black uppercase tracking-widest text-outline block mb-1">Owner Name (PII Masked)</span>
+<p class="font-bold text-on-surface">Rajesh K**** S****</p>
+<p class="hindi-text text-sm text-outline">राजेश कु**** सिं****</p>
+</div>
+<div>
+<span class="text-[0.65rem] font-black uppercase tracking-widest text-outline block mb-1">Identification</span>
+<p class="font-bold text-on-surface">Aadhaar XXXX-XXXX-4492</p>
+</div>
+<div>
+<span class="text-[0.65rem] font-black uppercase tracking-widest text-outline block mb-1">Area Details</span>
+<p class="font-bold text-on-surface">2450 SQ FT / Residential</p>
+</div>
+</div>
+<div class="relative h-64 rounded-lg overflow-hidden bg-surface-container-high">
+<img alt="Luxury apartment complex architecture" class="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700" data-alt="Modern high-rise luxury apartment complex with glass balconies and manicured gardens under a clear blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgvpCQFR50AxAYRMJkDZNgGq_e6nR8v1fJycJWEAPbhEQZLAr2s8kuqLbbdd6Dw4zLvAKE4-Q_co-j9sm5UUUjjJD3JjnUbvMWOyqJH_pfMINczcgYInwOVRkfFfGBMs1vx5D4hFm26lLbnMXlWb0numlsdljBTaXuRr9VgvMGEX6QYzszNumUuC8bp0yNg7L49nmbyUPfDY6dqMrCrfB5qHzUzLy6wcXbjLBldMqD5YyFLhnPu4YeSnZNJL5jrrVvuKvbBMaAAeo"/>
+<div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-sm text-[10px] font-bold uppercase tracking-widest">Geo-Tagged Reference</div>
+</div>
+</div>
+<div class="mt-auto bg-surface-container-low p-6 flex justify-between items-center">
+<div class="flex items-center gap-4">
+<button class="bg-secondary-container text-on-secondary-container px-6 py-2 rounded font-bold text-xs uppercase tracking-widest hover:bg-outline-variant transition-all">View Full Deed</button>
+<button class="text-primary font-bold text-xs uppercase tracking-widest flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-sm">download</span> Certified Copy
+                        </button>
+</div>
+<div class="text-right">
+<span class="text-[0.65rem] font-bold text-outline block">STAMP DUTY PAID</span>
+<span class="text-lg font-black text-on-surface">₹ 4,82,000</span>
+</div>
+</div>
+</div>
+<!-- Hash Mismatch Alert Card -->
+<div class="lg:col-span-4 bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_10px_30px_rgba(186,26,26,0.05)] border-l-4 border-error flex flex-col">
+<div class="p-8 flex-1">
+<div class="flex items-center gap-3 text-error mb-4">
+<span class="material-symbols-outlined">warning</span>
+<h4 class="font-bold uppercase tracking-tighter">Hash Mismatch Detected</h4>
+</div>
+<div class="bg-error-container/20 p-4 rounded-lg mb-6">
+<p class="text-xs font-medium text-error leading-relaxed">
+                            A discrepancy has been detected between the local record copy and the distributed ledger state. Access to this record is restricted pending authority review.
+                        </p>
+</div>
+<div class="space-y-4 opacity-40 select-none grayscale">
+<div>
+<span class="text-[0.65rem] font-black uppercase tracking-widest block mb-1">Record ID</span>
+<p class="font-mono text-xs">ERR_DEED_9921_X</p>
+</div>
+<div>
+<span class="text-[0.65rem] font-black uppercase tracking-widest block mb-1">Status</span>
+<div class="bg-error/10 text-error px-2 py-1 inline-block text-[10px] font-bold rounded">QUARANTINED</div>
+</div>
+</div>
+</div>
+<div class="p-6 bg-surface-container-low">
+<button class="w-full py-3 border border-error text-error rounded font-bold text-xs uppercase tracking-widest hover:bg-error hover:text-white transition-all">Report Discrepancy</button>
+</div>
+</div>
+<!-- Sidebar Statistics / Context -->
+<div class="lg:col-span-4 space-y-8">
+<div class="bg-primary text-white p-8 rounded-xl shadow-2xl">
+<h5 class="text-xs font-bold uppercase tracking-[0.2em] opacity-60 mb-6">Network Health</h5>
+<div class="space-y-6">
+<div class="flex justify-between items-end">
+<span class="text-3xl font-black">99.9%</span>
+<span class="text-[10px] font-bold text-tertiary-fixed uppercase">Active Nodes</span>
+</div>
+<div class="h-1 bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-fixed w-[99.9%]"></div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<p class="text-[10px] font-bold uppercase opacity-50">Block Height</p>
+<p class="text-sm font-mono">14,291,002</p>
+</div>
+<div>
+<p class="text-[10px] font-bold uppercase opacity-50">TPS Rate</p>
+<p class="text-sm font-mono">2,401 txn/s</p>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl space-y-4">
+<h5 class="text-xs font-black uppercase tracking-widest text-outline">Search History</h5>
+<div class="space-y-3">
+<div class="flex items-center justify-between text-xs font-medium">
+<span>Deed #112/2023</span>
+<span class="text-outline">12 Oct</span>
+</div>
+<div class="flex items-center justify-between text-xs font-medium">
+<span>Plot 44-B Greenways</span>
+<span class="text-outline">09 Oct</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Secondary Info Card -->
+<div class="lg:col-span-8 bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/10">
+<div class="flex flex-col md:flex-row justify-between gap-8">
+<div class="flex-1 space-y-4">
+<h4 class="text-xl font-bold text-primary">Metadata Chain</h4>
+<div class="space-y-4">
+<div class="flex items-start gap-4">
+<div class="w-1 h-full bg-outline-variant rounded-full mt-2"></div>
+<div>
+<span class="text-[10px] font-bold uppercase text-outline">Block 02 - Transfer of Title</span>
+<p class="text-sm font-medium">Processed via Node ID: SUB_REG_DEL_04</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="w-1 h-full bg-outline-variant rounded-full mt-2"></div>
+<div>
+<span class="text-[10px] font-bold uppercase text-outline">Block 01 - Initial Registry</span>
+<p class="text-sm font-medium">Original Ledger Entry 2024-01-15</p>
+</div>
+</div>
+</div>
+</div>
+<div class="w-full md:w-64 bg-surface-container-high rounded-lg p-6 flex flex-col justify-center items-center text-center">
+<span class="material-symbols-outlined text-4xl text-primary mb-2">qr_code_2</span>
+<p class="text-[10px] font-bold uppercase tracking-widest text-outline mb-4">Verification QR</p>
+<p class="text-[10px] text-outline leading-tight">Scan with LekhAI mobile app to verify physical copy integrity.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full flex flex-col md:flex-row justify-between items-center px-12 py-12 border-t border-slate-100 bg-[#F9F9F9] mt-24">
+<p class="font-['Inter'] text-[0.75rem] uppercase tracking-widest text-slate-600 mb-6 md:mb-0">© 2024 LekhAI Digital Ledger. Immutable Authority.</p>
+<div class="flex gap-8">
+<a class="font-['Inter'] text-[0.75rem] uppercase tracking-widest text-slate-500 hover:text-black transition-all" href="#">Privacy Policy</a>
+<a class="font-['Inter'] text-[0.75rem] uppercase tracking-widest text-slate-500 hover:text-black transition-all" href="#">Terms of Service</a>
+<a class="font-['Inter'] text-[0.75rem] uppercase tracking-widest text-slate-500 hover:text-black transition-all" href="#">Security Whitepaper</a>
+</div>
+</footer>
+</body></html>

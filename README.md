@@ -1,95 +1,216 @@
-# LekhAI | Digital Ledger Authority
+# 🏛️ LekhAI — Digital Ledger Authority
 
-![GIGW 3.0 Certified](https://img.shields.io/badge/GIGW_3.0-Certified-success)
-![DPDP Act 2023](https://img.shields.io/badge/DPDP_Act-Compliant-blue)
-![Flask](https://img.shields.io/badge/Backend-Flask-black)
-![Supabase](https://img.shields.io/badge/Database-Supabase-green)
+**Privacy-First AI System for Land Records in India**
 
-LekhAI is a lightweight, deployable digital land records ecosystem. It combines privacy-safe AI document processing, immutable cryptographic hashing, and officer-grade audit visibility into a single seamless workflow.
-
-Designed for **Immutable Authority**, LekhAI strictly adheres to India's DPDP Act 2023, GIGW 3.0 accessibility guidelines, and the Indian Evidence Act Sec 65B.
-
----
-
-## ✨ Core Features
-
-*   **🛡️ DPDP-Aligned Record Processing:**
-    *   **Ghost Identity (Tokenization):** Aadhaar numbers are tokenized immediately. The raw Aadhaar is stored securely in an AES-256 Vault, and only masked tokens (`tok_4d9a****`) enter the main database.
-    *   **Explicit Consent:** User consent is strictly enforced before processing any document.
-    *   **Secure Ephemeral Storage:** Uploaded files are overwritten and destroyed immediately after extraction to prevent forensic recovery.
-*   **👁️ Immutable Ledger (Hash Chain):**
-    *   Every successful record ingestion creates a verifiable SHA-256 hash block pointing to the previous entry, ensuring tamper-proof historical data.
-    *   Real-time verification dashboard to audit the integrity of the chain.
-*   **🔤 Hybrid AI OCR Pipeline:**
-    *   Powered by `GEMMA-4-31b-it` Vision (via Google GenAI) for highly accurate English and Hindi field extraction (ULPIN, Area, Owner Name).
-*   **📈 Performance Monitoring:**
-    *   Built-in Prometheus exporter (`/metrics`) for tracking API latency, request volume, and HTTP error rates.
-*   **⚖️ Evidence Act Sec 65B Ready:**
-    *   Built-in legal module that generates digitally signed evidentiary certificates proving record integrity for judicial proceedings.
-*   **🌐 Bilingual Experience:**
-    *   GIGW 3.0 compliant, offering instant English and Hindi toggling across citizen-facing and officer-facing workflows.
+!GIGW 3.0 Certified
+!DPDP Act 2023
+!Flask
+!Supabase
+!Status
 
 ---
 
-## 🏗️ System Architecture
+## 🌍 Overview
 
-```text
-[Scanned Upload] 
-      ↓
-[ Hybrid OCR ] → Extracts ULPIN, Aadhaar, Area
-      ↓
-[Privacy Gate] → Masks PII, Generates HMAC Ghost Token, Secures to AES Vault
-      ↓
-[Hash Ledger]  → Current Hash = SHA256(Record_Data + Previous_Hash)
-      ↓
-[ Supabase ]   → Stores Tokenized Data + Ledger Block
-      ↓
-[ Dashboard ]  → Live Tamper Verification & Sec 65B Output
+**LekhAI** is a **privacy-first, AI-powered digital land record system** designed for India.
+
+It transforms **paper-based land documents** into:
+
+* 🔐 Secure digital records
+* 🧾 Legally admissible evidence
+* 🔗 Tamper-proof ledger entries
+
+---
+
+## 🧠 System Architecture (FAANG-Level)
+
+> Clean, modular, production-ready architecture with strict privacy enforcement.
+
+📌 **Recommended Diagram (Dark Theme for PPT & GitHub)**
+
+!LekhAI Architecture
+
+### 🔄 Core Flow
+
+```
+Upload → OCR → Extraction → Privacy → Hash → Database → Dashboard
 ```
 
+### 🧩 Key Layers
+
+* **Frontend** → Citizen & Officer dashboards
+* **API Gateway** → Auth + Rate limiting
+* **Backend (Flask)** → Orchestration layer
+* **AI Layer** → OCR via external APIs (Gemma / HuggingFace)
+* **Privacy Layer** → Aadhaar tokenization + AES vault
+* **Integrity Layer** → SHA-256 hash chain
+* **Data Layer** → PostgreSQL (Supabase + RLS)
+* **Cache** → Redis for performance
+* **Monitoring** → Logs + metrics
+
 ---
 
-## 🚀 Quick Start Guide
+## 💡 Problem It Solves
 
-### 1. Prerequisites
-* Python 3.9+
-* A Supabase account (PostgreSQL)
-* A Google GenAI API Key (for Gemma OCR)
+India’s land record ecosystem suffers from:
 
-### 2. Installation
+* ❌ Forged / tampered documents
+* ❌ Manual verification delays
+* ❌ Privacy risks (Aadhaar exposure)
+* ❌ Lack of audit transparency
 
-Clone the repository and install dependencies:
+👉 LekhAI introduces **trust, traceability, and automation**
+
+---
+
+## ✨ Key Features
+
+### 🔐 Privacy-First Architecture
+
+* Aadhaar is **never stored directly**
+* Ghost tokenization
+* AES-256 secure vault
+* Consent-based processing
+
+---
+
+### 🤖 AI-Powered OCR
+
+* Extracts structured fields (ULPIN, Owner, Area)
+* Works on multilingual documents (Hindi + English)
+
+---
+
+### 🔗 Immutable Ledger
+
+* SHA-256 hash chain
+* Tamper detection
+* Real-time verification
+
+---
+
+### ⚖️ Legal Compliance
+
+* Section 65B certificate generation
+* Court-ready digital evidence
+
+---
+
+## ⚙️ Tech Stack
+
+| Layer      | Technology                  |
+| ---------- | --------------------------- |
+| Backend    | Flask                       |
+| Database   | Supabase (PostgreSQL + RLS) |
+| AI / OCR   | Gemini / HuggingFace APIs   |
+| Security   | AES-256 + Tokenization      |
+| Cache      | Redis                       |
+| Deployment | Render / Docker             |
+
+---
+
+## 🚀 Quick Start
+
 ```bash
 git clone https://github.com/imrcoder07/Lekh_AI.git
 cd Lekh_AI
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
-```
-
-### 3. Environment Configuration
-Create a `.env` file in the root directory and populate it with your credentials:
-
-```ini
-# Supabase Database Keys
-SUPABASE_URL=your_supabase_project_url
-SUPABASE_KEY=your_supabase_service_role_key
-
-# AI / OCR Engine
-GEMINI_API_KEY=your_google_genai_api_key
-GEMMA_MODEL=gemini-1.5-flash  # Vision capable model
-
-# Application Secrets
-SECRET_KEY=your_flask_session_secret
-```
-
-### 4. Run the Application
-```bash
 python app.py
 ```
-The application will be available at `http://127.0.0.1:5000/`.
 
 ---
 
-## 📜 License
-Proprietary / Government GovTech Prototype.
+## 🌐 Deployment (Render)
+
+```bash
+Build: pip install -r requirements.txt
+Start: gunicorn app:app
+```
+
+---
+
+## 📡 API Endpoints
+
+### POST /api/upload
+
+```json
+{
+  "status": "success",
+  "data": {
+    "ulpin": "...",
+    "owner_token": "...",
+    "area": "...",
+    "hash": "..."
+  }
+}
+```
+
+### GET /api/verify
+
+```json
+{
+  "status": "valid",
+  "tampered": false
+}
+```
+
+---
+
+## 🎥 Demo
+
+> Add a short walkthrough video (30–90s). This is the highest-impact section for reviewers.
+
+* ▶️ **Watch Demo (YouTube/Loom)**: https://your-demo-link
+* 🌐 **Live App (optional)**: https://your-live-url
+
+**What to show in demo:**
+
+1. Upload a sample land document
+2. OCR extraction (ULPIN, Owner, Area)
+3. Privacy masking (tokenized Aadhaar)
+4. Hash generation + verification
+5. Dashboard view (valid / tampered)
+
+---
+
+## 📸 Screenshots
+
+> Store images under `/docs/screenshots/` and reference them below.
+
+### 🖥️ Dashboard (Officer)
+
+!Dashboard
+
+### 📄 Upload & OCR Result
+
+!Upload OCR
+
+### 🔐 Privacy Layer (Tokenization)
+
+!Privacy
+
+### 🔗 Ledger Verification
+
+!Ledger
+
+---
+
+## 🚀 Future Improvements
+
+* Blockchain-based land registry (RWA)
+* Offline OCR
+* Mobile app for field officers
+* Role-based dashboards
+
+---
+
+## 👨‍💻 Author
+
+**Islam (imrcoder07)**
+B.Tech CSE (IoT + Cybersecurity)
+
+---
+
+## � License
+
+Proprietary — Academic Prototype

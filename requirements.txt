@@ -10,8 +10,7 @@ supabase==2.28.3
 # --- Cryptography ---
 cryptography==46.0.6
 
-# --- OCR (Hybrid: Local preprocessing + Gemini Vision API) ---
-pytesseract>=0.3.10        # Lightweight wrapper for Tesseract binary (~10KB)
+# --- OCR (Local preprocessing + Gemini Vision API) ---
 opencv-python-headless==4.8.1.78  # Image preprocessing only, no GUI (~30MB)
 numpy<2.0                  # Pinned: opencv 4.8 not compatible with numpy 2.x
 Pillow>=10.0.0

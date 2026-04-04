@@ -14,6 +14,9 @@ RUN apt-get update && apt-get install -y \
 # Set the working directory inside the container
 WORKDIR /app
 
+# Create a non-root user for security and set permissions
+RUN useradd -m appuser && chown -R appuser:appuser /app
+
 # Copy requirements first to leverage Docker cache
 COPY requirements.txt .
 
@@ -23,8 +26,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application code
 COPY . .
 
+# Switch to the non-root user
+USER appuser
+
 # Expose the port Flask runs on
 EXPOSE 5000
 
-# Command to run the application
-CMD ["python", "app.py"]
+# Command to run the application (Using Gunicorn for production)
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "--timeout", "120", "app:app"]

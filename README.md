@@ -47,14 +47,14 @@ Designed for **Immutable Authority**, LekhAI strictly adheres to India's DPDP Ac
 
 ---
 
-## 🚀 Quick Start Guide
+## 🚀 Quick Start (Local Development)
 
 ### 1. Prerequisites
-* Python 3.9+
+* Docker Desktop (Recommended) OR Python 3.9+
 * A Supabase account (PostgreSQL)
 * A Google GenAI API Key (for Gemma OCR)
 
-### 2. Installation
+### 2. Local Installation (Without Docker)
 
 Clone the repository and install dependencies:
 ```bash

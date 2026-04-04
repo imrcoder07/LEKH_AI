@@ -4,6 +4,7 @@ import os
 import logging
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
+from prometheus_flask_exporter import PrometheusMetrics
 
 # Load environment variables
 load_dotenv(override=True)
@@ -20,6 +21,11 @@ logging.basicConfig(
 )
 
 app = Flask(__name__)
+
+# Initialize Prometheus metrics
+# Automatically tracks request rates, latencies, and errors across all endpoints
+metrics = PrometheusMetrics(app)
+
 # Secret key needed for session management (e.g. Bilingual Toggle state)
 app.secret_key = os.getenv("SECRET_KEY", "dev_secret_key_lekhai")
 

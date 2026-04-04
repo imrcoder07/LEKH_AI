@@ -22,6 +22,8 @@ Designed for **Immutable Authority**, LekhAI strictly adheres to India's DPDP Ac
     *   Real-time verification dashboard to audit the integrity of the chain.
 *   **🔤 Hybrid AI OCR Pipeline:**
     *   Powered by `GEMMA-4-31b-it` Vision (via Google GenAI) for highly accurate English and Hindi field extraction (ULPIN, Area, Owner Name).
+*   **📈 Performance Monitoring:**
+    *   Built-in Prometheus exporter (`/metrics`) for tracking API latency, request volume, and HTTP error rates.
 *   **⚖️ Evidence Act Sec 65B Ready:**
     *   Built-in legal module that generates digitally signed evidentiary certificates proving record integrity for judicial proceedings.
 *   **🌐 Bilingual Experience:**
@@ -47,14 +49,14 @@ Designed for **Immutable Authority**, LekhAI strictly adheres to India's DPDP Ac
 
 ---
 
-## 🚀 Quick Start (Local Development)
+## 🚀 Quick Start Guide
 
 ### 1. Prerequisites
-* Docker Desktop (Recommended) OR Python 3.9+
+* Python 3.9+
 * A Supabase account (PostgreSQL)
 * A Google GenAI API Key (for Gemma OCR)
 
-### 2. Local Installation (Without Docker)
+### 2. Installation
 
 Clone the repository and install dependencies:
 ```bash

@@ -202,6 +202,12 @@ def dashboard():
     return render_template('dashboard.html', lang=session.get('lang', 'en'))
 
 
+@app.route('/records')
+def records():
+    """Citizen Records Search UI."""
+    return render_template('records.html', lang=session.get('lang', 'en'))
+
+
 @app.route('/api/records/<record_id>', methods=['GET'])
 def get_record(record_id):
     """

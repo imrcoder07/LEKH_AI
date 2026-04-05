@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="{% if lang == 'hi' %}hi{% else %}en{% endif %}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if lang == 'hi' %}LekhAI | नागरिक रिकॉर्ड{% else %}LekhAI | Citizen Records{% endif %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=1.3">
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar-inner">
+            <div class="brand-block">
+                <div class="brand-mark">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                </div>
+                <div>
+                    <div class="brand-title">LekhAI</div>
+                    <div class="brand-sub">{% if lang == 'hi' %}नागरिक पोर्टल{% else %}Citizen Portal{% endif %}</div>
+                </div>
+            </div>
+
+            <nav class="topnav">
+                <a class="topnav-link" href="/">{% if lang == 'hi' %}होम{% else %}Home{% endif %}</a>
+                <a class="topnav-link active" href="/records">{% if lang == 'hi' %}रिकॉर्ड खोजें{% else %}Search Records{% endif %}</a>
+            </nav>
+
+            <div class="topbar-actions">
+                <button class="tone-button" type="button" onclick="toggleLanguage()">
+                    {% if lang == 'hi' %}English{% else %}हिन्दी{% endif %}
+                </button>
+                <a class="primary-button" href="/dashboard" style="text-decoration: none; display: inline-block; text-align: center; margin-left: 0.5rem;">
+                    {% if lang == 'hi' %}अधिकारी पोर्टल{% else %}Officer Portal{% endif %}
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero-section" style="padding-bottom: 2rem;">
+            <div class="hero-grid" style="grid-template-columns: 1fr;">
+                <div class="hero-copy" style="align-items: center; text-align: center;">
+                    <div class="kicker-row" style="justify-content: center;">
+                        <span class="chip chip-success">{% if lang == 'hi' %}सार्वजनिक पहुंच{% else %}Public Access{% endif %}</span>
+                        <span class="rule-line" style="flex: 0 0 50px;"></span>
+                    </div>
+                    <h1 class="hero-title" style="font-size: 3rem;">
+                        {% if lang == 'hi' %}अपना भूमि रिकॉर्ड<br><span>खोजें</span>{% else %}Find Your Land<br><span>Record</span>{% endif %}
+                    </h1>
+                    <p class="hero-text" style="max-width: 600px; margin: 0 auto;">
+                        {% if lang == 'hi' %}अपना 14-अंकीय ULPIN दर्ज करें। आपकी गोपनीयता की रक्षा के लिए आपकी व्यक्तिगत पहचान (आधार) को स्वचालित रूप से छुपा दिया जाएगा।{% else %}Enter your 14-digit ULPIN. Your personal identity (Aadhaar) will be automatically masked to protect your privacy.{% endif %}
+                    </p>
+                    
+                    <div class="search-panel" style="margin-top: 2rem; max-width: 600px; width: 100%; display: flex; gap: 1rem; align-items: center; justify-content: space-between;">
+                        <div class="search-field" style="flex: 1;">
+                            <label>{% if lang == 'hi' %}ULPIN नंबर{% else %}ULPIN Number{% endif %}</label>
+                            <input type="text" id="ulpin-input" placeholder="e.g. 08JD0101234567" style="width: 100%; padding: 0.5rem; background: transparent; border: none; color: white; font-family: monospace; font-size: 1.1rem; outline: none; text-transform: uppercase;">
+                        </div>
+                        <button class="primary-button search-cta" type="button" onclick="searchRecord()">
+                            {% if lang == 'hi' %}खोजें{% else %}Search{% endif %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="feature-section">
+            <div id="search-results" class="feature-grid" style="display: none; justify-content: center;">
+                <!-- Record will be injected here -->
+            </div>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}?v=1.3"></script>
+    <script>
+        // Local script to handle the search API call for this specific page
+        async function searchRecord() {
+            const ulpin = document.getElementById('ulpin-input').value.trim();
+            const resultsDiv = document.getElementById('search-results');
+            
+            if (!ulpin) {
+                alert("Please enter a ULPIN");
+                return;
+            }
+
+            resultsDiv.style.display = 'grid';
+            resultsDiv.innerHTML = `
+                <article class="feature-card feature-card-wide" style="text-align: center;">
+                    <div class="feature-icon">⏳</div>
+                    <h2>Searching...</h2>
+                    <p>Querying the immutable ledger for ULPIN: ${ulpin}</p>
+                </article>
+            `;
+
+            try {
+                // Set session to 'user' role automatically for this view to ensure masking
+                await fetch('/api/demo/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ role: 'user' })
+                });
+
+                const res = await fetch(`/api/search?ulpin=${ulpin}`);
+                const data = await res.json();
+
+                if (data.results && data.results.length > 0) {
+                    const record = data.results[0];
+                    // Mask the token visually for the citizen view
+                    const maskedToken = record.Owner_Token.substring(0, 12) + "****";
+                    
+                    resultsDiv.innerHTML = `
+                        <article class="feature-card feature-card-wide">
+                            <div class="feature-icon">📄</div>
+                            <h2>Record Found: ${record.ULPIN}</h2>
+                            <div class="code-block" style="margin-top: 1rem; text-align: left;">
+                                <p><strong>Area:</strong> ${record.Area}</p>
+                                <p><strong>Owner Token:</strong> <span style="color: #4ade80;">${maskedToken}</span></p>
+                                <p style="margin-top: 1rem; font-size: 0.85rem; color: #9ca3af;">* Raw Aadhaar is hidden per DPDP Act constraints.</p>
+                            </div>
+                        </article>
+                    `;
+                } else {
+                    resultsDiv.innerHTML = `<article class="feature-card feature-card-wide"><div class="feature-icon">❌</div><h2>No Record Found</h2><p>Could not locate ULPIN ${ulpin} in the ledger.</p></article>`;
+                }
+            } catch (err) {
+                resultsDiv.innerHTML = `<article class="feature-card feature-card-wide"><div class="feature-icon">⚠️</div><h2>Error</h2><p>Failed to connect to the database.</p></article>`;
+            }
+        }
+    </script>
+</body>
+</html>

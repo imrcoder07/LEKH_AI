@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=1.3">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 </head>
 <body>
     <header class="topbar">
@@ -32,6 +33,12 @@
             <div class="topbar-actions">
                 <button class="tone-button" type="button" onclick="toggleLanguage()">
                     {% if lang == 'hi' %}English{% else %}हिन्दी{% endif %}
+                </button>
+                <button class="tone-button" type="button" onclick="openDpdpModal()" style="margin-right: 0.5rem;">
+                    {% if lang == 'hi' %}नया रिकॉर्ड अपलोड करें{% else %}Upload New Record{% endif %}
+                </button>
+                <button class="tone-button" type="button" onclick="openDpdpModal()">
+                    {% if lang == 'hi' %}नया रिकॉर्ड अपलोड करें{% else %}Upload New Record{% endif %}
                 </button>
                 <button class="primary-button" type="button" onclick="runVerification()">
                     {% if lang == 'hi' %}लेजर सत्यापित करें{% else %}Verify Ledger{% endif %}
@@ -101,6 +108,145 @@
             <div class="modal-footer" id="upload-footer">
                 <button class="tone-button" type="button" onclick="document.getElementById('legal-modal').style.display='none'">{% if lang == 'hi' %}बंद करें{% else %}Close{% endif %}</button>
                 <button class="primary-button" type="button" onclick="window.print()">{% if lang == 'hi' %}प्रिंट करें{% else %}Print / Save PDF{% endif %}</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DPDP Consent Modal (Tailwind Styled) -->
+    <div id="dpdp-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm" style="display: none;">
+        <div class="bg-surface-container-lowest rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden border border-outline-variant/20 mx-4">
+            <div class="flex justify-between items-center p-6 border-b border-outline-variant/30">
+                <div>
+                    <p class="text-[0.65rem] font-bold text-slate-400 tracking-widest uppercase mb-1">DPDP</p>
+                    <h2 class="text-xl font-bold text-primary" style="margin:0;">{% if lang == 'hi' %}डेटा सुरक्षा सूचना{% else %}Data Protection Notice & Consent{% endif %}</h2>
+                </div>
+                <button class="text-slate-400 hover:text-primary transition-colors" type="button" onclick="closeModals()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">
+                    &times;
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="bg-surface-container-low p-4 rounded-lg mb-6">
+                    <h3 class="font-bold text-sm text-primary mb-2">{% if lang == 'hi' %}इस अपलोड के दौरान क्या होता है{% else %}What happens during this upload{% endif %}</h3>
+                    <ul class="text-sm text-secondary space-y-2 list-disc pl-4" style="margin-left: 1.5rem;">
+                        <li>{% if lang == 'hi' %}दस्तावेज़ को ओसीआर के लिए संसाधित किया जाता है।{% else %}The document is processed for OCR and structured field extraction.{% endif %}</li>
+                        <li>{% if lang == 'hi' %}कच्चा आधार कभी संग्रहीत नहीं होता है।{% else %}Raw Aadhaar is never stored in the main database.{% endif %}</li>
+                        <li>{% if lang == 'hi' %}अस्थायी फ़ाइलें हटा दी जाती हैं।{% else %}Temporary upload files are deleted after processing.{% endif %}</li>
+                    </ul>
+                </div>
+                <label class="flex items-start gap-3 cursor-pointer">
+                    <input type="checkbox" id="dpdp-consent-checkbox" class="mt-1 rounded text-primary focus:ring-primary focus:ring-2">
+                    <span class="text-sm text-on-surface-variant font-medium">{% if lang == 'hi' %}मैंने गोपनीयता सूचना की समीक्षा की है और इस दस्तावेज़ को संसाधित करने के लिए सहमति देता हूं।{% else %}I have reviewed the privacy notice and consent to processing this document.{% endif %}</span>
+                </label>
+            </div>
+            <div class="p-6 bg-surface-container-low flex justify-end gap-3 border-t border-outline-variant/30">
+                <button class="px-4 py-2 text-sm font-bold text-secondary hover:text-primary transition-colors tone-button" type="button" onclick="closeModals()">{% if lang == 'hi' %}रद्द करें{% else %}Cancel{% endif %}</button>
+                <button class="px-6 py-2 text-sm font-bold bg-primary text-white rounded hover:bg-primary-container disabled:opacity-50 disabled:cursor-not-allowed transition-colors primary-button" type="button" id="btn-proceed" disabled onclick="proceedToUpload()" style="margin-left: 10px;">{% if lang == 'hi' %}सहमति और जारी रखें{% else %}Consent & Continue{% endif %}</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OCR Upload Modal (Tailwind Styled) -->
+    <div id="upload-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm" style="display: none;">
+        <div class="bg-surface-container-lowest rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden border border-outline-variant/20 mx-4">
+            <div class="flex justify-between items-center p-6 border-b border-outline-variant/30">
+                <div>
+                    <p class="text-[0.65rem] font-bold text-slate-400 tracking-widest uppercase mb-1">OCR Pipeline</p>
+                    <h2 class="text-xl font-bold text-primary" style="margin:0;">{% if lang == 'hi' %}सुरक्षित अपलोड ज़ोन{% else %}Secure Upload Zone{% endif %}</h2>
+                </div>
+                <button class="text-slate-400 hover:text-primary transition-colors" type="button" onclick="closeModals()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">
+                    &times;
+                </button>
+            </div>
+            <div class="p-6">
+                <p class="text-sm text-secondary mb-6">{% if lang == 'hi' %}एक भूमि रिकॉर्ड चुनें। सिस्टम एक प्रवाह में निष्कर्षण, गोपनीयता और लेजर प्रविष्टि को संभालेगा।{% else %}Choose a land record. The system will handle extraction, privacy, and ledger entry in one flow.{% endif %}</p>
+                <div id="drop-zone" class="border-2 border-dashed border-outline-variant rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-surface-container-low transition-colors" onclick="document.getElementById('file-input').click()" style="padding: 2rem; border: 2px dashed #c6c5d4; text-align: center;">
+                    <span class="material-symbols-outlined text-4xl text-primary mb-3" style="font-size: 2rem;">upload_file</span>
+                    <p id="upload-text" class="text-sm font-bold text-primary mb-1">{% if lang == 'hi' %}यहां भूमि रिकॉर्ड छोड़ें या चुनने के लिए क्लिक करें{% else %}Drop a land record here or click to choose{% endif %}</p>
+                    <span class="text-xs text-slate-400">PNG, JPG, JPEG, TIFF, BMP, PDF supported</span>
+                    <input type="file" id="file-input" class="hidden" accept=".png,.jpg,.jpeg,.tiff,.bmp,.pdf,image/*,application/pdf" style="display:none;">
+                </div>
+                <div id="file-meta" class="hidden mt-4 p-4 bg-surface-container-high rounded text-sm text-secondary font-mono" style="display:none;"></div>
+                <div id="loading-state" class="hidden mt-6 flex flex-col items-center justify-center py-8" style="display:none; text-align:center;">
+                    <h3 class="font-bold text-primary">{% if lang == 'hi' %}दस्तावेज़ संसाधित हो रहा है...{% else %}Processing Document...{% endif %}</h3>
+                </div>
+                <div id="result-state" class="hidden mt-6 bg-surface-container-high rounded-lg p-4" style="display:none; background:#f3f3f3; padding:1rem;">
+                    <h3 id="result-title" class="font-bold text-primary" style="margin-bottom: 0.5rem;"></h3>
+                    <pre id="result-details" class="text-xs font-mono text-secondary overflow-x-auto whitespace-pre-wrap max-h-48"></pre>
+                </div>
+            </div>
+            <div class="p-6 bg-surface-container-low flex justify-end gap-3 border-t border-outline-variant/30" id="upload-footer">
+                <button class="px-4 py-2 text-sm font-bold text-secondary hover:text-primary transition-colors tone-button" type="button" onclick="closeModals()">{% if lang == 'hi' %}बंद करें{% else %}Close{% endif %}</button>
+                <button class="px-6 py-2 text-sm font-bold bg-primary text-white rounded hover:bg-primary-container transition-colors primary-button" type="button" id="btn-upload" onclick="submitUpload()" style="margin-left: 10px;">{% if lang == 'hi' %}दस्तावेज़ संसाधित करें{% else %}Process Document{% endif %}</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DPDP Modal (Officer Upload Flow) -->
+    <div id="dpdp-modal" class="modal-overlay" aria-hidden="true" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div>
+                    <p class="modal-label">DPDP</p>
+                    <h2>{% if lang == 'hi' %}डेटा सुरक्षा सूचना और सहमति{% else %}Data Protection Notice & Consent{% endif %}</h2>
+                </div>
+                <button class="close-btn" type="button" onclick="closeModals()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="notice-box">
+                    <h3>{% if lang == 'hi' %}इस अपलोड के दौरान क्या होता है{% else %}What happens during this upload{% endif %}</h3>
+                    <ul class="notice-list">
+                        <li>{% if lang == 'hi' %}दस्तावेज़ को ओसीआर और संरचित फ़ील्ड निष्कर्षण के लिए संसाधित किया जाता है।{% else %}The document is processed for OCR and structured field extraction.{% endif %}</li>
+                        <li>{% if lang == 'hi' %}यदि आधार मौजूद है, तो इसे टोकनाइज़ किया जाता है; कच्चा मान मुख्य डेटाबेस में कभी संग्रहीत नहीं होता है।{% else %}If Aadhaar is present, it is tokenized; the raw value is never stored in the main database.{% endif %}</li>
+                        <li>{% if lang == 'hi' %}प्रसंस्करण के बाद अस्थायी अपलोड फ़ाइलें हटा दी जाती हैं।{% else %}Temporary upload files are deleted after processing.{% endif %}</li>
+                    </ul>
+                </div>
+                <label class="consent-checkbox">
+                    <input type="checkbox" id="dpdp-consent-checkbox">
+                    <span>{% if lang == 'hi' %}मैंने गोपनीयता सूचना की समीक्षा की है और इस दस्तावेज़ को संसाधित करने के लिए सहमति देता हूं।{% else %}I have reviewed the privacy notice and consent to processing this document.{% endif %}</span>
+                </label>
+            </div>
+            <div class="modal-footer">
+                <button class="tone-button" type="button" onclick="closeModals()">{% if lang == 'hi' %}रद्द करें{% else %}Cancel{% endif %}</button>
+                <button class="primary-button" type="button" id="btn-proceed" disabled onclick="proceedToUpload()">{% if lang == 'hi' %}सहमति और जारी रखें{% else %}Consent & Continue{% endif %}</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Modal (Officer Upload Flow) -->
+    <div id="upload-modal" class="modal-overlay" aria-hidden="true" style="display: none;">
+        <div class="modal-card upload-modal-card">
+            <div class="modal-header">
+                <div>
+                    <p class="modal-label">OCR</p>
+                    <h2>{% if lang == 'hi' %}सुरक्षित अपलोड ज़ोन{% else %}Secure Upload Zone{% endif %}</h2>
+                </div>
+                <button class="close-btn" type="button" onclick="closeModals()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="upload-intro">{% if lang == 'hi' %}एक भूमि रिकॉर्ड चुनें। सिस्टम एक प्रवाह में निष्कर्षण, गोपनीयता और लेजर प्रविष्टि को संभालेगा।{% else %}Choose a land record. The system will handle extraction, privacy, and ledger entry in one flow.{% endif %}</p>
+                <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+                    <div class="upload-zone-icon">📄</div>
+                    <p id="upload-text">{% if lang == 'hi' %}यहां भूमि रिकॉर्ड छोड़ें या चुनने के लिए क्लिक करें{% else %}Drop a land record here or click to choose{% endif %}</p>
+                    <span class="upload-hint">{% if lang == 'hi' %}PNG, JPG, JPEG, TIFF, BMP, PDF समर्थित{% else %}PNG, JPG, JPEG, TIFF, BMP, PDF supported{% endif %}</span>
+                    <input type="file" id="file-input" hidden accept=".png,.jpg,.jpeg,.tiff,.bmp,.pdf,image/*,application/pdf">
+                </div>
+                <div id="file-meta" class="file-meta hidden"></div>
+                <div id="loading-state" class="hidden loading-state">
+                    <div class="spinner"></div>
+                    <h3>{% if lang == 'hi' %}दस्तावेज़ संसाधित हो रहा है{% else %}Processing Document{% endif %}</h3>
+                    <p id="loading-text">{% if lang == 'hi' %}Gemma OCR, गोपनीयता जाँच और लेज़र की तैयारी चल रही है...{% else %}Gemma OCR, privacy checks, and ledger preparation are in progress...{% endif %}</p>
+                </div>
+                <div id="result-state" class="hidden result-box">
+                    <div class="result-header">
+                        <div id="result-icon"></div>
+                        <h3 id="result-title"></h3>
+                    </div>
+                    <pre id="result-details" class="code-block"></pre>
+                </div>
+            </div>
+            <div class="modal-footer" id="upload-footer">
+                <button class="tone-button" type="button" onclick="closeModals()">{% if lang == 'hi' %}बंद करें{% else %}Close{% endif %}</button>
+                <button class="primary-button" type="button" id="btn-upload" onclick="submitUpload()">{% if lang == 'hi' %}दस्तावेज़ संसाधित करें{% else %}Process Document{% endif %}</button>
             </div>
         </div>
     </div>

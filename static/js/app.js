@@ -179,6 +179,9 @@ document.addEventListener('DOMContentLoaded', () => {
         dropZone.addEventListener('drop', event => {
             handleFiles(event.dataTransfer.files);
         });
+        dropZone.addEventListener('click', () => {
+            if (fileInput) fileInput.click();
+        });
     }
 
     // Fix broken file upload: Change event listener was missing

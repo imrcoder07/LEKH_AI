@@ -93,8 +93,8 @@ def verify_chain() -> dict:
         }
     """
     try:
-        from supabase import create_client
-        sb = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
+        from supabase_utils import get_supabase_client
+        sb = get_supabase_client()
 
         # Fetch full ledger ordered from first to last (ascending).
         # Use timestamp rather than UUID id so chronological chain order is stable.
@@ -114,6 +114,16 @@ def verify_chain() -> dict:
                 "verified_at": _now()
             }
 
+        # Fetch all records in one query to avoid N+1
+        record_ids = [entry["record_id"] for entry in ledger]
+        rec_resp = (
+            sb.table("land_records")
+            .select("id, ulpin, owner_token, area, geometry")
+            .in_("id", record_ids)
+            .execute()
+        )
+        records_by_id = {rec["id"]: rec for rec in rec_resp.data}
+
         chain_results = []
         tampered_count = 0
         expected_previous_hash = "GENESIS"
@@ -124,15 +134,9 @@ def verify_chain() -> dict:
             previous_hash = entry.get("previous_hash", "GENESIS")
             timestamp     = entry.get("timestamp", "")
 
-            # Fetch the corresponding land record to recompute hash
-            rec_resp = (
-                sb.table("land_records")
-                .select("ulpin, owner_token, area, geometry")
-                .eq("id", record_id)
-                .execute()
-            )
-
-            if not rec_resp.data:
+            # Fetch the corresponding land record from cache
+            rec = records_by_id.get(record_id)
+            if not rec:
                 chain_results.append({
                     "record_id":     record_id,
                     "timestamp":     timestamp,
@@ -145,8 +149,6 @@ def verify_chain() -> dict:
                 })
                 tampered_count += 1
                 continue
-
-            rec = rec_resp.data[0]
             # Reconstruct the data dict exactly as it was during ingestion
             # Note: keys must match ocr_pipeline.persist_to_database() exactly
             record_data = {

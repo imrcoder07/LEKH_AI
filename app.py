@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request, jsonify, session
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from supabase_utils import get_supabase_client
 import os
 import logging
 from dotenv import load_dotenv
@@ -22,19 +25,36 @@ logging.basicConfig(
 
 app = Flask(__name__)
 
+# Initialize rate limiter
+limiter = Limiter(
+    app=app,
+    key_func=get_remote_address,
+    storage_uri=os.getenv("RATE_LIMIT_STORAGE_URI", "memory://"),
+    default_limits=["200 per day", "50 per hour"]
+)
+
 # Initialize Prometheus metrics
 # Automatically tracks request rates, latencies, and errors across all endpoints
 metrics = PrometheusMetrics(app)
 
 # Secret key needed for session management (e.g. Bilingual Toggle state)
 app.secret_key = os.getenv("SECRET_KEY", "dev_secret_key_lekhai")
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_SECURE'] = os.getenv("SESSION_COOKIE_SECURE", "False").lower() in ["true", "1", "yes"]
 
 # Enable CORS for the application
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "*")
+if not allowed_origins.strip() or allowed_origins.strip() == "*":
+    cors_origins = "*"
+else:
+    cors_origins = [origin.strip() for origin in allowed_origins.split(",") if origin.strip()]
+CORS(app, resources={r"/api/*": {"origins": cors_origins}})
 
 # Configure upload folder
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB limit
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Allowed extensions for land records (PDF, images)
@@ -83,7 +103,12 @@ def _runtime_health_payload():
 @app.before_request
 def ensure_lang():
     if 'lang' not in session:
-        session['lang'] = 'en'
+        # Detect language from Accept-Language header
+        accept_lang = request.headers.get('Accept-Language', 'en')
+        if 'hi' in accept_lang.lower():
+            session['lang'] = 'hi'
+        else:
+            session['lang'] = 'en'
 
 @app.after_request
 def force_utf8(response):
@@ -118,6 +143,7 @@ def api_health():
     return jsonify(_runtime_health_payload()), 200
 
 @app.route('/api/upload', methods=['GET', 'POST'])
+@limiter.limit("10 per hour")
 def api_upload():
     """
     Mission 4: OCR Ingestion Pipeline
@@ -182,6 +208,7 @@ def api_upload():
         secure_delete_file(file_path)
 
 @app.route('/api/verify', methods=['GET'])
+@limiter.limit("20 per hour")
 def api_verify():
     """
     Mission 5: Cryptographic hash chain verification.
@@ -214,6 +241,7 @@ def search():
 
 
 @app.route('/api/records/<record_id>', methods=['GET'])
+@limiter.limit("100 per hour")
 def get_record(record_id):
     """
     Retrieve a land record by ID with role-based redaction.
@@ -221,12 +249,15 @@ def get_record(record_id):
     Demo: set session role via /api/demo/login
     """
     from privacy_layer import redact_record, assert_no_pii_leak, log_record_access
-    from supabase import create_client
 
     role  = session.get('role', 'user')
     uid   = session.get('user_id', 'anonymous')
 
-    sb = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
+    try:
+        sb = get_supabase_client()
+    except RuntimeError as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
     resp = sb.table("land_records").select("*").eq("id", record_id).execute()
 
     if not resp.data:
@@ -247,6 +278,10 @@ def demo_login():
     Body: {"role": "admin" | "user" | "auditor", "user_id": "..."}
     Remove or protect this route before production deployment.
     """
+    debug_mode = os.getenv("FLASK_DEBUG", "False").lower() in ["true", "1", "yes"]
+    if not debug_mode:
+        return jsonify({"error": "Demo login disabled in production"}), 403
+    
     body = request.get_json() or {}
     allowed = {'admin', 'user', 'auditor'}
     role = body.get('role', 'user')
@@ -257,6 +292,7 @@ def demo_login():
     return jsonify({"status": "ok", "role": role}), 200
 
 @app.route('/api/search', methods=['GET'])
+@limiter.limit("50 per hour")
 def api_search():
     """
     Mission 1 & 4: Search records by ULPIN.
@@ -266,8 +302,11 @@ def api_search():
     if not ulpin:
         return jsonify({"status": "error", "message": "ULPIN parameter is required."}), 400
 
-    from supabase import create_client
-    sb = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
+    try:
+        sb = get_supabase_client()
+    except RuntimeError as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
     resp = sb.table("land_records").select("id, \"ULPIN\", \"Owner_Token\", \"Area\"").eq("ULPIN", ulpin.upper()).execute()
 
     if not resp.data:
@@ -279,6 +318,7 @@ def api_search():
     }), 200
 
 @app.route('/api/legal/<record_id>/certificate', methods=['GET'])
+@limiter.limit("20 per hour")
 def api_legal_certificate(record_id):
     """Mission 6: Generate Sec 65B Legal Certificate"""
     from legal_module import generate_sec65b_certificate

@@ -171,6 +171,23 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+    // Fix broken drag-and-drop: Event listeners were missing
+    if (dropZone) {
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+        dropZone.addEventListener('drop', event => {
+            handleFiles(event.dataTransfer.files);
+        });
+    }
+
+    // Fix broken file upload: Change event listener was missing
+    if (fileInput) {
+        fileInput.addEventListener('change', event => {
+            handleFiles(event.target.files);
+        });
+    }
+
     // Auto-run verification on dashboard load
     if (window.location.pathname === '/dashboard') {
         runVerification();

@@ -1,6 +1,6 @@
 import os
 from datetime import datetime, timezone
-from supabase import create_client
+from supabase_utils import get_supabase_client
 
 def generate_sec65b_certificate(record_id: str, request_ip: str = "127.0.0.1") -> dict:
     """
@@ -8,7 +8,7 @@ def generate_sec65b_certificate(record_id: str, request_ip: str = "127.0.0.1") -
     Generates a Section 65B (Indian Evidence Act) compliance certificate
     for a digital land record.
     """
-    sb = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
+    sb = get_supabase_client()
     
     # 1. Fetch Record
     rec_resp = sb.table("land_records").select("*").eq("id", record_id).execute()

@@ -454,8 +454,8 @@ def _compute_hash(data: dict, previous_hash: str) -> str:
 
 def _get_last_hash() -> str:
     try:
-        from supabase import create_client
-        sb = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
+        from supabase_utils import get_supabase_client
+        sb = get_supabase_client()
         result = (sb.table("land_ledger")
                   .select("current_hash")
                   .order("timestamp", desc=True)
@@ -486,7 +486,7 @@ def persist_to_database(fields: dict) -> dict:
     Privacy gate + AES Vault + Supabase insert.
     Aadhaar never reaches the database in any form.
     """
-    from supabase import create_client
+    from supabase_utils import get_supabase_client
     from adv_crypto import (
         encrypt_aadhaar,
         generate_reference_token,
@@ -525,7 +525,8 @@ def persist_to_database(fields: dict) -> dict:
         "geometry":    {},
     }
 
-    sb = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
+    from supabase_utils import get_supabase_client
+    sb = get_supabase_client()
     try:
         rec = _run_with_timeout(
             lambda: sb.table("land_records").insert(record_data).execute(),

@@ -1,44 +1,54 @@
 ﻿﻿<!DOCTYPE html>
 <html lang="{% if lang == 'hi' %}hi{% else %}en{% endif %}">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% if lang == 'hi' %}LekhAI | अधिकारी डैशबोर्ड{% else %}LekhAI | Officer Dashboard{% endif %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans:wght@400;500;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=1.3">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 </head>
+
 <body>
     <header class="topbar">
         <div class="topbar-inner">
             <div class="brand-block">
                 <div class="brand-mark">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
                     </svg>
                 </div>
                 <div>
                     <div class="brand-title">LekhAI</div>
-                    <div class="brand-sub">{% if lang == 'hi' %}सत्यापन पैनल{% else %}Verification Panel{% endif %}</div>
+                    <div class="brand-sub">{% if lang == 'hi' %}सत्यापन पैनल{% else %}Verification Panel{% endif %}
+                    </div>
                 </div>
             </div>
 
             <nav class="topnav">
                 <a class="topnav-link" href="/">{% if lang == 'hi' %}होम{% else %}Home{% endif %}</a>
-                <a class="topnav-link" href="/verify">{% if lang == 'hi' %}OCR सत्यापन{% else %}OCR Verify{% endif %}</a>
-                <a class="topnav-link active" href="/dashboard">{% if lang == 'hi' %}डैशबोर्ड{% else %}Dashboard{% endif %}</a>
+                <a class="topnav-link" href="/verify">{% if lang == 'hi' %}OCR सत्यापन{% else %}OCR Verify{% endif
+                    %}</a>
+                <a class="topnav-link active" href="/dashboard">{% if lang == 'hi' %}डैशबोर्ड{% else %}Dashboard{% endif
+                    %}</a>
             </nav>
 
             <div class="topbar-actions">
-                <button class="tone-button" type="button" onclick="toggleLanguage()">
+                <button class="tone-button" type="button" id="btn-toggle-lang">
                     {% if lang == 'hi' %}English{% else %}हिन्दी{% endif %}
                 </button>
-                <a class="tone-button" href="/verify" style="text-decoration: none; display: inline-block; margin-right: 0.5rem;">
+                <a class="tone-button" href="/verify"
+                    style="text-decoration: none; display: inline-block; margin-right: 0.5rem;">
                     {% if lang == 'hi' %}नया रिकॉर्ड अपलोड करें{% else %}Upload New Record{% endif %}
                 </a>
-                <button class="primary-button" type="button" onclick="runVerification()">
+                <button class="primary-button" type="button" id="btn-verify-ledger">
                     {% if lang == 'hi' %}लेजर सत्यापित करें{% else %}Verify Ledger{% endif %}
                 </button>
             </div>
@@ -50,27 +60,36 @@
             <div class="hero-grid" style="grid-template-columns: 1fr;">
                 <div class="hero-copy">
                     <div class="kicker-row">
-                        <span class="chip chip-success">{% if lang == 'hi' %}अधिकारी पहुंच{% else %}Officer Access{% endif %}</span>
+                        <span class="chip chip-success">{% if lang == 'hi' %}अधिकारी पहुंच{% else %}Officer Access{%
+                            endif %}</span>
                         <span class="rule-line"></span>
                     </div>
                     <h1 class="hero-title" style="font-size: 3rem;">
-                        {% if lang == 'hi' %}डिजिटल भूमि लेजर<br><span>ऑडिट डैशबोर्ड</span>{% else %}Digital Land Ledger<br><span>Audit Dashboard</span>{% endif %}
+                        {% if lang == 'hi' %}डिजिटल भूमि लेजर<br><span>ऑडिट डैशबोर्ड</span>{% else %}Digital Land
+                        Ledger<br><span>Audit Dashboard</span>{% endif %}
                     </h1>
                     <p class="hero-text" style="max-width: 800px;">
-                        {% if lang == 'hi' %}क्रिप्टोग्राफ़िक अखंडता की निगरानी करें, छेड़छाड़ का पता लगाएं, और न्यायालय प्रस्तुतियों के लिए धारा 65B साक्ष्य प्रमाणपत्र तैयार करें।{% else %}Monitor cryptographic integrity, detect tampering, and generate Section 65B evidence certificates for court submissions.{% endif %}
+                        {% if lang == 'hi' %}क्रिप्टोग्राफ़िक अखंडता की निगरानी करें, छेड़छाड़ का पता लगाएं, और न्यायालय
+                        प्रस्तुतियों के लिए धारा 65B साक्ष्य प्रमाणपत्र तैयार करें।{% else %}Monitor cryptographic
+                        integrity, detect tampering, and generate Section 65B evidence certificates for court
+                        submissions.{% endif %}
                     </p>
-                    
+
                     <div class="metric-row" id="dashboard-metrics" style="margin-top: 2rem;">
                         <div class="metric-card">
-                            <span class="metric-label">{% if lang == 'hi' %}सिस्टम स्थिति{% else %}System Status{% endif %}</span>
-                            <strong id="status-indicator">{% if lang == 'hi' %}जाँच हो रही है...{% else %}Checking...{% endif %}</strong>
+                            <span class="metric-label">{% if lang == 'hi' %}सिस्टम स्थिति{% else %}System Status{% endif
+                                %}</span>
+                            <strong id="status-indicator">{% if lang == 'hi' %}जाँच हो रही है...{% else %}Checking...{%
+                                endif %}</strong>
                         </div>
                         <div class="metric-card">
-                            <span class="metric-label">{% if lang == 'hi' %}कुल रिकॉर्ड{% else %}Total Records{% endif %}</span>
+                            <span class="metric-label">{% if lang == 'hi' %}कुल रिकॉर्ड{% else %}Total Records{% endif
+                                %}</span>
                             <strong id="total-records-count">0</strong>
                         </div>
                         <div class="metric-card">
-                            <span class="metric-label">{% if lang == 'hi' %}अंतिम ब्लॉक{% else %}Last Block{% endif %}</span>
+                            <span class="metric-label">{% if lang == 'hi' %}अंतिम ब्लॉक{% else %}Last Block{% endif
+                                %}</span>
                             <strong id="last-block-hash">...</strong>
                         </div>
                     </div>
@@ -78,11 +97,33 @@
             </div>
         </section>
 
+        <style>
+            @keyframes pulseScale {
+
+                0%,
+                100% {
+                    transform: scale(1);
+                }
+
+                50% {
+                    transform: scale(1.03);
+                }
+            }
+
+            .animate-pulse-scale {
+                animation: pulseScale 2s infinite ease-in-out;
+                transform-origin: center;
+                display: inline-block;
+            }
+        </style>
         <section class="feature-section max-w-7xl mx-auto px-8 w-full" style="margin-top: 2rem; margin-bottom: 4rem;">
-            <div class="bg-surface-container-lowest rounded-2xl shadow-[0_20px_40px_rgba(26,35,126,0.08)] overflow-hidden w-full p-8">
+            <div
+                class="bg-surface-container-low rounded-2xl shadow-[0px_20px_40px_rgba(26,35,126,0.06)] overflow-hidden w-full p-8">
                 <div class="mb-6 flex flex-col gap-1">
-                    <h2 class="text-xl font-black text-primary">{% if lang == 'hi' %}क्रिप्टोग्राफिक लेजर लॉग{% else %}Cryptographic Ledger Logs{% endif %}</h2>
-                    <span class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest">{% if lang == 'hi' %}अपरिवर्तनीय रिकॉर्ड{% else %}Immutable Records{% endif %}</span>
+                    <h2 class="text-primary font-bold">{% if lang == 'hi' %}क्रिप्टोग्राफिक लेजर लॉग{% else
+                        %}Cryptographic Ledger Logs{% endif %}</h2>
+                    <span class="text-xs uppercase tracking-widest text-slate-400">{% if lang == 'hi' %}अपरिवर्तनीय
+                        रिकॉर्ड{% else %}Immutable Records{% endif %}</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm border-separate border-spacing-y-3">
@@ -91,8 +132,10 @@
                                 <th class="px-6 py-3">{% if lang == 'hi' %}स्थिति{% else %}Status{% endif %}</th>
                                 <th class="px-6 py-3">{% if lang == 'hi' %}ULPIN{% else %}ULPIN{% endif %}</th>
                                 <th class="px-6 py-3">{% if lang == 'hi' %}समय{% else %}Timestamp{% endif %}</th>
-                                <th class="px-6 py-3">{% if lang == 'hi' %}हैश / टोकन{% else %}Hash / Token{% endif %}</th>
-                                <th class="px-6 py-3 text-right">{% if lang == 'hi' %}कार्रवाई{% else %}Action{% endif %}</th>
+                                <th class="px-6 py-3">{% if lang == 'hi' %}हैश / टोकन{% else %}Hash / Token{% endif %}
+                                </th>
+                                <th class="px-6 py-3 text-right">{% if lang == 'hi' %}कार्रवाई{% else %}Action{% endif
+                                    %}</th>
                             </tr>
                         </thead>
                         <tbody id="records-tbody">
@@ -112,153 +155,110 @@
                     <p class="modal-label">Sec 65B Evidence Act</p>
                     <h2>{% if lang == 'hi' %}कानूनी प्रमाणपत्र{% else %}Legal Certificate{% endif %}</h2>
                 </div>
-                <button class="close-btn" type="button" onclick="document.getElementById('legal-modal').style.display='none'">&times;</button>
+                <button class="close-btn" type="button" id="btn-close-legal-top">&times;</button>
             </div>
             <div class="modal-body">
-                <pre id="certificate-content" class="code-block" style="white-space: pre-wrap; font-size: 0.85rem; max-height: 400px; overflow-y: auto;"></pre>
+                <pre id="certificate-content" class="code-block"
+                    style="white-space: pre-wrap; font-size: 0.85rem; max-height: 400px; overflow-y: auto;"></pre>
             </div>
-            <div class="modal-footer" id="upload-footer">
-                <button class="tone-button" type="button" onclick="document.getElementById('legal-modal').style.display='none'">{% if lang == 'hi' %}बंद करें{% else %}Close{% endif %}</button>
-                <button class="primary-button" type="button" onclick="window.print()">{% if lang == 'hi' %}प्रिंट करें{% else %}Print / Save PDF{% endif %}</button>
+            <div class="modal-footer" id="legal-footer">
+                <button class="tone-button" type="button" id="btn-close-legal-bottom">{% if lang == 'hi' %}बंद करें{% else %}Close{% endif %}</button>
+                <button class="primary-button" type="button" id="btn-print-cert">{% if lang == 'hi' %}प्रिंट करें{% else %}Print / Save PDF{% endif %}</button>
             </div>
         </div>
     </div>
 
     <!-- DPDP Consent Modal (Tailwind Styled) -->
-    <div id="dpdp-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm" style="display: none;">
-        <div class="bg-surface-container-lowest rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden border border-outline-variant/20 mx-4">
+    <div id="dpdp-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm"
+        style="display: none;">
+        <div
+            class="bg-surface-container-lowest rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden border border-outline-variant/20 mx-4">
             <div class="flex justify-between items-center p-6 border-b border-outline-variant/30">
                 <div>
                     <p class="text-[0.65rem] font-bold text-slate-400 tracking-widest uppercase mb-1">DPDP</p>
-                    <h2 class="text-xl font-bold text-primary" style="margin:0;">{% if lang == 'hi' %}डेटा सुरक्षा सूचना{% else %}Data Protection Notice & Consent{% endif %}</h2>
+                    <h2 class="text-xl font-bold text-primary" style="margin:0;">{% if lang == 'hi' %}डेटा सुरक्षा
+                        सूचना{% else %}Data Protection Notice & Consent{% endif %}</h2>
                 </div>
-                <button class="text-slate-400 hover:text-primary transition-colors" type="button" onclick="closeModals()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">
+                <button class="text-slate-400 hover:text-primary transition-colors close-modals-btn" type="button" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">
                     &times;
                 </button>
             </div>
             <div class="p-6">
                 <div class="bg-surface-container-low p-4 rounded-lg mb-6">
-                    <h3 class="font-bold text-sm text-primary mb-2">{% if lang == 'hi' %}इस अपलोड के दौरान क्या होता है{% else %}What happens during this upload{% endif %}</h3>
+                    <h3 class="font-bold text-sm text-primary mb-2">{% if lang == 'hi' %}इस अपलोड के दौरान क्या होता
+                        है{% else %}What happens during this upload{% endif %}</h3>
                     <ul class="text-sm text-secondary space-y-2 list-disc pl-4" style="margin-left: 1.5rem;">
-                        <li>{% if lang == 'hi' %}दस्तावेज़ को ओसीआर के लिए संसाधित किया जाता है।{% else %}The document is processed for OCR and structured field extraction.{% endif %}</li>
-                        <li>{% if lang == 'hi' %}कच्चा आधार कभी संग्रहीत नहीं होता है।{% else %}Raw Aadhaar is never stored in the main database.{% endif %}</li>
-                        <li>{% if lang == 'hi' %}अस्थायी फ़ाइलें हटा दी जाती हैं।{% else %}Temporary upload files are deleted after processing.{% endif %}</li>
+                        <li>{% if lang == 'hi' %}दस्तावेज़ को ओसीआर के लिए संसाधित किया जाता है।{% else %}The document
+                            is processed for OCR and structured field extraction.{% endif %}</li>
+                        <li>{% if lang == 'hi' %}कच्चा आधार कभी संग्रहीत नहीं होता है।{% else %}Raw Aadhaar is never
+                            stored in the main database.{% endif %}</li>
+                        <li>{% if lang == 'hi' %}अस्थायी फ़ाइलें हटा दी जाती हैं।{% else %}Temporary upload files are
+                            deleted after processing.{% endif %}</li>
                     </ul>
                 </div>
                 <label class="flex items-start gap-3 cursor-pointer">
-                    <input type="checkbox" id="dpdp-consent-checkbox" class="mt-1 rounded text-primary focus:ring-primary focus:ring-2">
-                    <span class="text-sm text-on-surface-variant font-medium">{% if lang == 'hi' %}मैंने गोपनीयता सूचना की समीक्षा की है और इस दस्तावेज़ को संसाधित करने के लिए सहमति देता हूं।{% else %}I have reviewed the privacy notice and consent to processing this document.{% endif %}</span>
+                    <input type="checkbox" id="dpdp-consent-checkbox"
+                        class="mt-1 rounded text-primary focus:ring-primary focus:ring-2">
+                    <span class="text-sm text-on-surface-variant font-medium">{% if lang == 'hi' %}मैंने गोपनीयता सूचना
+                        की समीक्षा की है और इस दस्तावेज़ को संसाधित करने के लिए सहमति देता हूं।{% else %}I have reviewed
+                        the privacy notice and consent to processing this document.{% endif %}</span>
                 </label>
             </div>
             <div class="p-6 bg-surface-container-low flex justify-end gap-3 border-t border-outline-variant/30">
-                <button class="px-4 py-2 text-sm font-bold text-secondary hover:text-primary transition-colors tone-button" type="button" onclick="closeModals()">{% if lang == 'hi' %}रद्द करें{% else %}Cancel{% endif %}</button>
-                <button class="px-6 py-2 text-sm font-bold bg-primary text-white rounded hover:bg-primary-container disabled:opacity-50 disabled:cursor-not-allowed transition-colors primary-button" type="button" id="btn-proceed" disabled onclick="proceedToUpload()" style="margin-left: 10px;">{% if lang == 'hi' %}सहमति और जारी रखें{% else %}Consent & Continue{% endif %}</button>
+                <button class="px-4 py-2 text-sm font-bold text-secondary hover:text-primary transition-colors tone-button close-modals-btn" type="button">{% if lang == 'hi' %}रद्द करें{% else %}Cancel{% endif %}</button>
+                <button class="px-6 py-2 text-sm font-bold bg-primary text-white rounded hover:bg-primary-container disabled:opacity-50 disabled:cursor-not-allowed transition-colors primary-button" type="button" id="btn-proceed" disabled style="margin-left: 10px;">{% if lang == 'hi' %}सहमति और जारी रखें{% else %}Consent & Continue{% endif %}</button>
             </div>
         </div>
     </div>
 
     <!-- OCR Upload Modal (Tailwind Styled) -->
-    <div id="upload-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm" style="display: none;">
-        <div class="bg-surface-container-lowest rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden border border-outline-variant/20 mx-4">
+    <div id="upload-modal"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm"
+        style="display: none;">
+        <div
+            class="bg-surface-container-lowest rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden border border-outline-variant/20 mx-4">
             <div class="flex justify-between items-center p-6 border-b border-outline-variant/30">
                 <div>
                     <p class="text-[0.65rem] font-bold text-slate-400 tracking-widest uppercase mb-1">OCR Pipeline</p>
-                    <h2 class="text-xl font-bold text-primary" style="margin:0;">{% if lang == 'hi' %}सुरक्षित अपलोड ज़ोन{% else %}Secure Upload Zone{% endif %}</h2>
+                    <h2 class="text-xl font-bold text-primary" style="margin:0;">{% if lang == 'hi' %}सुरक्षित अपलोड
+                        ज़ोन{% else %}Secure Upload Zone{% endif %}</h2>
                 </div>
-                <button class="text-slate-400 hover:text-primary transition-colors" type="button" onclick="closeModals()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">
+                <button class="text-slate-400 hover:text-primary transition-colors close-modals-btn" type="button" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">
                     &times;
                 </button>
             </div>
             <div class="p-6">
-                <p class="text-sm text-secondary mb-6">{% if lang == 'hi' %}एक भूमि रिकॉर्ड चुनें। सिस्टम एक प्रवाह में निष्कर्षण, गोपनीयता और लेजर प्रविष्टि को संभालेगा।{% else %}Choose a land record. The system will handle extraction, privacy, and ledger entry in one flow.{% endif %}</p>
-                <div id="drop-zone" class="border-2 border-dashed border-outline-variant rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-surface-container-low transition-colors" onclick="document.getElementById('file-input').click()" style="padding: 2rem; border: 2px dashed #c6c5d4; text-align: center;">
-                    <span class="material-symbols-outlined text-4xl text-primary mb-3" style="font-size: 2rem;">upload_file</span>
-                    <p id="upload-text" class="text-sm font-bold text-primary mb-1">{% if lang == 'hi' %}यहां भूमि रिकॉर्ड छोड़ें या चुनने के लिए क्लिक करें{% else %}Drop a land record here or click to choose{% endif %}</p>
+                <p class="text-sm text-secondary mb-6">{% if lang == 'hi' %}एक भूमि रिकॉर्ड चुनें। सिस्टम एक प्रवाह में
+                    निष्कर्षण, गोपनीयता और लेजर प्रविष्टि को संभालेगा।{% else %}Choose a land record. The system will
+                    handle extraction, privacy, and ledger entry in one flow.{% endif %}</p>
+                <div id="drop-zone" class="border-2 border-dashed border-outline-variant rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-surface-container-low transition-colors" style="padding: 2rem; border: 2px dashed #c6c5d4; text-align: center;">
+                    <span class="material-symbols-outlined text-4xl text-primary mb-3"
+                        style="font-size: 2rem;">upload_file</span>
+                    <p id="upload-text" class="text-sm font-bold text-primary mb-1">{% if lang == 'hi' %}यहां भूमि
+                        रिकॉर्ड छोड़ें या चुनने के लिए क्लिक करें{% else %}Drop a land record here or click to choose{%
+                        endif %}</p>
                     <span class="text-xs text-slate-400">PNG, JPG, JPEG, TIFF, BMP, PDF supported</span>
-                    <input type="file" id="file-input" class="hidden" accept=".png,.jpg,.jpeg,.tiff,.bmp,.pdf,image/*,application/pdf" style="display:none;">
+                    <input type="file" id="file-input" class="hidden"
+                        accept=".png,.jpg,.jpeg,.tiff,.bmp,.pdf,image/*,application/pdf" style="display:none;">
                 </div>
-                <div id="file-meta" class="hidden mt-4 p-4 bg-surface-container-high rounded text-sm text-secondary font-mono" style="display:none;"></div>
-                <div id="loading-state" class="hidden mt-6 flex flex-col items-center justify-center py-8" style="display:none; text-align:center;">
-                    <h3 class="font-bold text-primary">{% if lang == 'hi' %}दस्तावेज़ संसाधित हो रहा है...{% else %}Processing Document...{% endif %}</h3>
+                <div id="file-meta"
+                    class="hidden mt-4 p-4 bg-surface-container-high rounded text-sm text-secondary font-mono"
+                    style="display:none;"></div>
+                <div id="loading-state" class="hidden mt-6 flex flex-col items-center justify-center py-8"
+                    style="display:none; text-align:center;">
+                    <h3 class="font-bold text-primary">{% if lang == 'hi' %}दस्तावेज़ संसाधित हो रहा है...{% else
+                        %}Processing Document...{% endif %}</h3>
                 </div>
-                <div id="result-state" class="hidden mt-6 bg-surface-container-high rounded-lg p-4" style="display:none; background:#f3f3f3; padding:1rem;">
+                <div id="result-state" class="hidden mt-6 bg-surface-container-high rounded-lg p-4"
+                    style="display:none; background:#f3f3f3; padding:1rem;">
                     <h3 id="result-title" class="font-bold text-primary" style="margin-bottom: 0.5rem;"></h3>
-                    <pre id="result-details" class="text-xs font-mono text-secondary overflow-x-auto whitespace-pre-wrap max-h-48"></pre>
+                    <pre id="result-details"
+                        class="text-xs font-mono text-secondary overflow-x-auto whitespace-pre-wrap max-h-48"></pre>
                 </div>
             </div>
             <div class="p-6 bg-surface-container-low flex justify-end gap-3 border-t border-outline-variant/30" id="upload-footer">
-                <button class="px-4 py-2 text-sm font-bold text-secondary hover:text-primary transition-colors tone-button" type="button" onclick="closeModals()">{% if lang == 'hi' %}बंद करें{% else %}Close{% endif %}</button>
-                <button class="px-6 py-2 text-sm font-bold bg-primary text-white rounded hover:bg-primary-container transition-colors primary-button" type="button" id="btn-upload" onclick="submitUpload()" style="margin-left: 10px;">{% if lang == 'hi' %}दस्तावेज़ संसाधित करें{% else %}Process Document{% endif %}</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- DPDP Modal (Officer Upload Flow) -->
-    <div id="dpdp-modal" class="modal-overlay" aria-hidden="true" style="display: none;">
-        <div class="modal-card">
-            <div class="modal-header">
-                <div>
-                    <p class="modal-label">DPDP</p>
-                    <h2>{% if lang == 'hi' %}डेटा सुरक्षा सूचना और सहमति{% else %}Data Protection Notice & Consent{% endif %}</h2>
-                </div>
-                <button class="close-btn" type="button" onclick="closeModals()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="notice-box">
-                    <h3>{% if lang == 'hi' %}इस अपलोड के दौरान क्या होता है{% else %}What happens during this upload{% endif %}</h3>
-                    <ul class="notice-list">
-                        <li>{% if lang == 'hi' %}दस्तावेज़ को ओसीआर और संरचित फ़ील्ड निष्कर्षण के लिए संसाधित किया जाता है।{% else %}The document is processed for OCR and structured field extraction.{% endif %}</li>
-                        <li>{% if lang == 'hi' %}यदि आधार मौजूद है, तो इसे टोकनाइज़ किया जाता है; कच्चा मान मुख्य डेटाबेस में कभी संग्रहीत नहीं होता है।{% else %}If Aadhaar is present, it is tokenized; the raw value is never stored in the main database.{% endif %}</li>
-                        <li>{% if lang == 'hi' %}प्रसंस्करण के बाद अस्थायी अपलोड फ़ाइलें हटा दी जाती हैं।{% else %}Temporary upload files are deleted after processing.{% endif %}</li>
-                    </ul>
-                </div>
-                <label class="consent-checkbox">
-                    <input type="checkbox" id="dpdp-consent-checkbox">
-                    <span>{% if lang == 'hi' %}मैंने गोपनीयता सूचना की समीक्षा की है और इस दस्तावेज़ को संसाधित करने के लिए सहमति देता हूं।{% else %}I have reviewed the privacy notice and consent to processing this document.{% endif %}</span>
-                </label>
-            </div>
-            <div class="modal-footer">
-                <button class="tone-button" type="button" onclick="closeModals()">{% if lang == 'hi' %}रद्द करें{% else %}Cancel{% endif %}</button>
-                <button class="primary-button" type="button" id="btn-proceed" disabled onclick="proceedToUpload()">{% if lang == 'hi' %}सहमति और जारी रखें{% else %}Consent & Continue{% endif %}</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Upload Modal (Officer Upload Flow) -->
-    <div id="upload-modal" class="modal-overlay" aria-hidden="true" style="display: none;">
-        <div class="modal-card upload-modal-card">
-            <div class="modal-header">
-                <div>
-                    <p class="modal-label">OCR</p>
-                    <h2>{% if lang == 'hi' %}सुरक्षित अपलोड ज़ोन{% else %}Secure Upload Zone{% endif %}</h2>
-                </div>
-                <button class="close-btn" type="button" onclick="closeModals()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p class="upload-intro">{% if lang == 'hi' %}एक भूमि रिकॉर्ड चुनें। सिस्टम एक प्रवाह में निष्कर्षण, गोपनीयता और लेजर प्रविष्टि को संभालेगा।{% else %}Choose a land record. The system will handle extraction, privacy, and ledger entry in one flow.{% endif %}</p>
-                <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
-                    <div class="upload-zone-icon">📄</div>
-                    <p id="upload-text">{% if lang == 'hi' %}यहां भूमि रिकॉर्ड छोड़ें या चुनने के लिए क्लिक करें{% else %}Drop a land record here or click to choose{% endif %}</p>
-                    <span class="upload-hint">{% if lang == 'hi' %}PNG, JPG, JPEG, TIFF, BMP, PDF समर्थित{% else %}PNG, JPG, JPEG, TIFF, BMP, PDF supported{% endif %}</span>
-                    <input type="file" id="file-input" hidden accept=".png,.jpg,.jpeg,.tiff,.bmp,.pdf,image/*,application/pdf">
-                </div>
-                <div id="file-meta" class="file-meta hidden"></div>
-                <div id="loading-state" class="hidden loading-state">
-                    <div class="spinner"></div>
-                    <h3>{% if lang == 'hi' %}दस्तावेज़ संसाधित हो रहा है{% else %}Processing Document{% endif %}</h3>
-                    <p id="loading-text">{% if lang == 'hi' %}Gemma OCR, गोपनीयता जाँच और लेज़र की तैयारी चल रही है...{% else %}Gemma OCR, privacy checks, and ledger preparation are in progress...{% endif %}</p>
-                </div>
-                <div id="result-state" class="hidden result-box">
-                    <div class="result-header">
-                        <div id="result-icon"></div>
-                        <h3 id="result-title"></h3>
-                    </div>
-                    <pre id="result-details" class="code-block"></pre>
-                </div>
-            </div>
-            <div class="modal-footer" id="upload-footer">
-                <button class="tone-button" type="button" onclick="closeModals()">{% if lang == 'hi' %}बंद करें{% else %}Close{% endif %}</button>
-                <button class="primary-button" type="button" id="btn-upload" onclick="submitUpload()">{% if lang == 'hi' %}दस्तावेज़ संसाधित करें{% else %}Process Document{% endif %}</button>
+                <button class="px-4 py-2 text-sm font-bold text-secondary hover:text-primary transition-colors tone-button close-modals-btn" type="button">{% if lang == 'hi' %}बंद करें{% else %}Close{% endif %}</button>
+                <button class="px-6 py-2 text-sm font-bold bg-primary text-white rounded hover:bg-primary-container transition-colors primary-button" type="button" id="btn-upload" style="margin-left: 10px;">{% if lang == 'hi' %}दस्तावेज़ संसाधित करें{% else %}Process Document{% endif %}</button>
             </div>
         </div>
     </div>
@@ -266,7 +266,54 @@
     <script src="{{ url_for('static', filename='js/app.js') }}?v=1.3"></script>
     <script>
         // Independent Dashboard Data Fetcher
-        window.runVerification = async function() {
+        let isAdminSessionSet = false;
+
+        // HTML Entity Escaper for XSS Prevention
+        const escapeHTML = (str) => {
+            if (!str) return '';
+            return String(str).replace(/[&<>'"]/g, tag => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;'
+            }[tag]));
+        };
+
+        // CSP-Compliant Event Bindings (Removing inline onclick attributes)
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('btn-toggle-lang')?.addEventListener('click', () => {
+                if (typeof toggleLanguage === 'function') toggleLanguage();
+            });
+            document.getElementById('btn-verify-ledger')?.addEventListener('click', () => {
+                if (typeof runVerification === 'function') runVerification();
+            });
+
+            // Legal Modal
+            const legalModal = document.getElementById('legal-modal');
+            const closeLegal = () => { if (legalModal) legalModal.style.display = 'none'; };
+            document.getElementById('btn-close-legal-top')?.addEventListener('click', closeLegal);
+            document.getElementById('btn-close-legal-bottom')?.addEventListener('click', closeLegal);
+            document.getElementById('btn-print-cert')?.addEventListener('click', () => window.print());
+
+            // Upload & DPDP Modals
+            document.querySelectorAll('.close-modals-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (typeof closeModals === 'function') closeModals();
+                });
+            });
+            document.getElementById('btn-proceed')?.addEventListener('click', () => {
+                if (typeof proceedToUpload === 'function') proceedToUpload();
+            });
+            document.getElementById('btn-upload')?.addEventListener('click', () => {
+                if (typeof submitUpload === 'function') submitUpload();
+            });
+            document.getElementById('drop-zone')?.addEventListener('click', () => {
+                document.getElementById('file-input')?.click();
+            });
+        });
+
+        window.runVerification = async function () {
             const tbody = document.getElementById('records-tbody');
             const statusInd = document.getElementById('status-indicator');
             const totalCount = document.getElementById('total-records-count');
@@ -275,20 +322,39 @@
             if (!tbody) return;
 
             tbody.innerHTML = `
-                <tr>
-                    <td colspan="5" class="px-6 py-12 text-center text-secondary bg-surface-container-lowest rounded-xl">
-                        <div class="flex flex-col items-center justify-center"><span class="material-symbols-outlined text-4xl mb-2 animate-spin text-primary">refresh</span><p class="font-medium mt-2">{% if lang == 'hi' %}डेटा लोड हो रहा है...{% else %}Loading Data...{% endif %}</p></div>
-                    </td>
-                </tr>
-            `;
+<tr>
+  <td colspan="5" class="px-6 py-16 text-center bg-surface-container-lowest rounded-xl">
+    
+    <div class="flex flex-col items-center justify-center gap-4">
+      
+      <!-- Spinner -->
+      <div class="w-8 h-8 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+      
+      <!-- Text -->
+      <p class="text-sm font-semibold text-secondary">
+        Fetching ledger records...
+      </p>
+
+    </div>
+
+  </td>
+</tr>
+`;
 
             try {
-                // Set session to admin to ensure Officer-level API access
-                await fetch('/api/demo/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ role: 'admin' })
-                });
+                // Set session to admin to ensure Officer-level API access (only once per page load)
+                if (!isAdminSessionSet) {
+                    const loginRes = await fetch('/api/demo/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ role: 'admin' })
+                    });
+                    if (loginRes.ok) {
+                        isAdminSessionSet = true;
+                    } else {
+                        console.warn('Admin session setup failed, retrying on next verification');
+                    }
+                }
 
                 const res = await fetch('/api/verify');
                 const data = await res.json();
@@ -297,45 +363,115 @@
                     throw new Error(data.error || 'Unknown server error');
                 }
 
-                statusInd.textContent = data.status;
-                statusInd.style.color = data.status === 'INTACT' ? '#a3f69c' : '#ba1a1a';
-                totalCount.textContent = data.total;
+                const badgeWrapper = document.createElement('span');
+                const dot = document.createElement('span');
+                const textNode = document.createTextNode('');
+
+                if (data.status === 'INTACT') {
+                    badgeWrapper.className = "flex items-center gap-2 bg-tertiary-fixed text-on-tertiary-fixed px-4 py-2 rounded-lg font-bold";
+                    dot.className = "w-2 h-2 bg-on-tertiary-fixed rounded-full";
+                    textNode.nodeValue = " System Secure";
+                } else if (data.status === 'EMPTY') {
+                    badgeWrapper.className = "flex items-center gap-2 bg-surface-container-highest text-secondary px-4 py-2 rounded-lg font-bold";
+                    dot.className = "w-2 h-2 bg-secondary rounded-full";
+                    textNode.nodeValue = " Ledger Empty";
+                } else {
+                    badgeWrapper.className = "flex items-center gap-2 bg-error-container text-error px-4 py-2 rounded-lg font-bold";
+                    dot.className = "w-2 h-2 bg-error rounded-full";
+                    textNode.nodeValue = " Tampering Detected";
+                }
+                
+                badgeWrapper.appendChild(dot);
+                badgeWrapper.appendChild(textNode);
+                statusInd.textContent = ''; // Safely clear old text via pure DOM API
+                statusInd.appendChild(badgeWrapper);
+                totalCount.textContent = data.total || 0;
 
                 if (data.chain && data.chain.length > 0) {
                     const lastBlock = data.chain[data.chain.length - 1];
-                    lastHash.textContent = lastBlock.stored_hash.substring(0, 12) + '...';
+                    lastHash.textContent = (lastBlock.stored_hash || '').substring(0, 12) + '...';
 
                     tbody.innerHTML = '';
-                    
+
                     data.chain.slice().reverse().forEach(block => {
-                        const isOk = block.status === 'OK';
-                        
-                        const statusChip = isOk 
-                            ? `<div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-tertiary-fixed text-on-tertiary-fixed rounded-full text-xs font-bold shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-fixed animate-pulse"></span>OK</div>`
-                            : `<div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-error-container text-error rounded-full text-xs font-bold shadow-sm"><span class="material-symbols-outlined text-[0.8rem]">error</span>HASH_MISMATCH</div>`;
+                        // 1. Normalize status once for consistency across the loop
+                        const status = (block.status || '').toUpperCase();
+
+                        let statusChip = '';
+                        if (status === 'OK') {
+                            statusChip = `<div class="inline-flex items-center gap-2 bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 rounded-full font-bold shadow-sm">
+                                <span class="w-2 h-2 rounded-full bg-on-tertiary-fixed"></span>
+                                OK
+                            </div>`;
+                        } else if (status === 'BROKEN_LINK') {
+                            statusChip = `<div class="inline-flex items-center gap-2 bg-orange-100 text-orange-700 px-3 py-1 rounded-full font-bold shadow-sm border border-orange-500/30">
+                                <span class="w-2 h-2 rounded-full bg-orange-500"></span>
+                                BROKEN LINK
+                               </div>`;
+                        } else if (status === 'MISSING_RECORD') {
+                            statusChip = `<div class="inline-flex items-center gap-2 bg-error-container text-error px-3 py-1 rounded-full font-bold shadow-sm border border-error/30">
+                                <span class="w-2 h-2 rounded-full bg-error"></span>
+                                MISSING
+                               </div>`;
+                        } else {
+                            statusChip = `<div class="inline-flex items-center gap-2 bg-error-container text-error px-3 py-1 rounded-full font-bold shadow-sm border border-error/30">
+                                <span class="w-2 h-2 rounded-full bg-error"></span>
+                                TAMPERED
+                               </div>`;
+                        }
                         
                         const dateObj = new Date(block.timestamp);
-                        const formattedDate = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ' • ' + dateObj.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+                        const formattedDate = isNaN(dateObj) 
+                            ? 'Invalid Date' 
+                            : dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ' • ' + dateObj.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 
+                        // 2. Create the row DOM element first
                         const tr = document.createElement('tr');
-                        tr.className = 'bg-surface-container-lowest hover:bg-surface-container-high transition-all duration-200 group';
+                        tr.className = status === 'OK' 
+                            ? 'bg-surface-container-lowest rounded-xl shadow-sm hover:bg-surface-container-high hover:shadow-md transition-all duration-200 group border border-transparent hover:border-primary/10'
+                            : (status === 'BROKEN_LINK' 
+                                ? 'bg-orange-50/50 rounded-xl shadow-sm hover:bg-orange-50 hover:shadow-md transition-all duration-200 group border border-orange-200'
+                                : 'bg-error-container/10 rounded-xl shadow-sm hover:bg-error-container/20 hover:shadow-md transition-all duration-200 group border border-error/20');
+                        
+                        // 3. Inject static columns using innerHTML (safely escaped)
                         tr.innerHTML = `
-                            <td class="px-6 py-4 rounded-l-xl font-bold ${isOk ? 'text-tertiary-fixed' : 'text-error'}">${statusChip}</td>
-                            <td class="px-6 py-4 font-bold text-primary tracking-wide">${block.ulpin}</td>
-                            <td class="px-6 py-4 text-xs font-medium text-secondary">${formattedDate}</td>
-                            <td class="px-6 py-4 font-mono text-[0.75rem]">
-                                <div class="flex flex-col gap-1">
-                                    <div title="Prev: ${block.previous_hash}"><span class="text-slate-400 text-[0.65rem] uppercase tracking-widest mr-1">Hash</span><span class="font-bold text-primary">${block.stored_hash.substring(0, 16)}...</span></div>
-                                    <div class="opacity-80"><span class="text-slate-400 text-[0.65rem] uppercase tracking-widest mr-1">Tokn</span><span class="font-bold text-primary">${block.owner_token.substring(0, 12)}...</span></div>
+                            <td class="px-6 py-4 rounded-l-xl align-middle">${statusChip}</td>
+                            <td class="px-6 py-4 font-bold text-primary tracking-wide align-middle">${escapeHTML(block.ulpin)}</td>
+                            <td class="px-6 py-4 text-xs font-medium text-secondary align-middle">${formattedDate}</td>
+                            <td class="px-6 py-4 font-mono text-[0.8rem] align-middle">
+                                <div class="flex flex-col gap-2">
+                                    <div title="Prev: ${escapeHTML(block.previous_hash)}"><span class="text-xs text-slate-400 uppercase mr-1">Hash</span><span class="font-mono text-primary tracking-tight">${escapeHTML((block.stored_hash || '').substring(0, 16))}...</span></div>
+                                    <div class="opacity-80"><span class="text-xs text-slate-400 uppercase mr-1">Token</span><span class="font-mono text-primary tracking-tight">${escapeHTML((block.owner_token || '').substring(0, 12))}...</span></div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 text-right rounded-r-xl">
-                                <button onclick="generateCert('${block.record_id}')" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary hover:bg-primary-container active:scale-95 text-white text-xs font-bold rounded-lg transition-all border-none cursor-pointer shadow-sm hover:shadow-md">
-                                    <span class="material-symbols-outlined text-[1rem]">gavel</span>
-                                    {% if lang == 'hi' %}65B बनाएं{% else %}Generate 65B{% endif %}
-                                </button>
-                            </td>
                         `;
+
+                        // 4. Create and attach the action column using DOM APIs
+                        const actionTd = document.createElement('td');
+                        actionTd.className = "px-6 py-4 text-right rounded-r-xl align-middle";
+
+                        if (status === 'OK') {
+                            const btn = document.createElement('button');
+                            btn.className = "inline-flex items-center gap-2 px-4 py-2 bg-indigo-700 text-white rounded-lg font-semibold shadow-md hover:shadow-lg hover:bg-indigo-800 transition-all duration-200 active:scale-95";
+                            btn.innerHTML = `<span class="material-symbols-outlined text-[18px]">gavel</span>Generate 65B`;
+                            btn.dataset.id = block.record_id || '';
+                            btn.addEventListener('click', (e) => {
+                                generateCert(e.currentTarget.dataset.id, e.currentTarget);
+                            });
+                            actionTd.appendChild(btn);
+                        } else if (status === 'BROKEN_LINK') {
+                            actionTd.innerHTML = `<button disabled class="inline-flex items-center gap-2 px-4 py-2 bg-orange-100 text-orange-700 rounded-lg font-semibold border border-orange-500/30 cursor-not-allowed opacity-80">
+                                <span class="material-symbols-outlined text-[18px]">link_off</span>Chain Broken</button>`;
+                        } else if (status === 'MISSING_RECORD') {
+                            actionTd.innerHTML = `<button disabled class="inline-flex items-center gap-2 px-4 py-2 bg-error-container text-error rounded-lg font-semibold border border-error/30 cursor-not-allowed opacity-80">
+                                <span class="material-symbols-outlined text-[18px]">search_off</span>Record Missing</button>`;
+                        } else {
+                            actionTd.innerHTML = `<button disabled class="inline-flex items-center gap-2 px-4 py-2 bg-error-container text-error rounded-lg font-semibold border border-error/30 cursor-not-allowed opacity-80">
+                                <span class="material-symbols-outlined text-[18px]">block</span>Tampered</button>`;
+                        }
+
+                        // 5. Append everything together securely
+                        tr.appendChild(actionTd);
                         tbody.appendChild(tr);
                     });
                 } else {
@@ -349,15 +485,24 @@
                 statusInd.textContent = 'ERROR';
                 statusInd.style.color = '#ba1a1a';
                 tbody.innerHTML = `
-                    <tr class="bg-error-container/20 rounded-xl"><td colspan="5" class="px-6 py-12 text-center text-error rounded-xl"><span class="material-symbols-outlined text-4xl mb-2">error</span><h2 class="text-lg font-bold mb-1">Verification Failed</h2><p class="text-sm">${err.message}</p></td></tr>
+                    <tr class="bg-error-container/20 rounded-xl"><td colspan="5" class="px-6 py-12 text-center text-error rounded-xl"><span class="material-symbols-outlined text-4xl mb-2">error</span><h2 class="text-lg font-bold mb-1">Verification Failed</h2><p class="text-sm">${escapeHTML(err.message)}</p></td></tr>
                 `;
             }
         };
 
-        window.generateCert = async function(recordId) {
+        window.generateCert = async function (recordId, btn) {
+            const originalText = btn.innerHTML;
+
+            btn.innerHTML = `
+            <div class="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin"></div>
+            Generating...
+            `;
+            btn.disabled = true;
+
             try {
                 const res = await fetch(`/api/legal/${recordId}/certificate`);
                 const data = await res.json();
+
                 if (data.status === 'success') {
                     document.getElementById('certificate-content').textContent = data.data.certificate_text;
                     document.getElementById('legal-modal').style.display = 'flex';
@@ -367,9 +512,12 @@
             } catch (err) {
                 alert('Failed to generate certificate.');
             }
+
+            btn.innerHTML = originalText;
+            btn.disabled = false;
         };
 
-        document.addEventListener('DOMContentLoaded', window.runVerification);
     </script>
 </body>
+
 </html>

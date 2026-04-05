@@ -229,11 +229,8 @@ def _write_audit_log(
       UNAUTHORIZED_ACCESS_ATTEMPT
     """
     try:
-        from supabase import create_client
-        supabase = create_client(
-            os.getenv("SUPABASE_URL"),
-            os.getenv("SUPABASE_KEY")
-        )
+        from supabase_utils import get_supabase_client
+        supabase = get_supabase_client()
 
         ip = None
         try:

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html class="light" lang="{% if lang == 'hi' %}hi{% else %}en{% endif %}">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>{% if lang == 'hi' %}LekhAI | OCR सत्यापन पैनल{% else %}LekhAI | OCR Verification Panel{% endif %}</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=1.3">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f9f9f9; }
+        .hindi-text { font-family: 'Noto Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-panel { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#000666",
+                        "primary-container": "#1a237e",
+                        surface: "#f9f9f9",
+                        "surface-container-low": "#f3f3f3",
+                        "surface-container-highest": "#e2e2e2",
+                        "surface-container-lowest": "#ffffff",
+                        secondary: "#4c616c",
+                        "secondary-container": "#cfe6f2",
+                        tertiary: "#002103",
+                        "tertiary-fixed": "#a3f69c",
+                        error: "#ba1a1a",
+                        "outline-variant": "#c6c5d4"
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="text-[#1a1c1c] antialiased min-h-screen flex flex-col">
+
+    <!-- Top Navbar (Matching index.html) -->
+    <header class="topbar fixed w-full z-50">
+        <div class="topbar-inner">
+            <div class="brand-block">
+                <div class="brand-mark">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                </div>
+                <div>
+                    <div class="brand-title">LekhAI</div>
+                    <div class="brand-sub">{% if lang == 'hi' %}सत्यापन पैनल{% else %}Verification Panel{% endif %}</div>
+                </div>
+            </div>
+
+            <nav class="topnav">
+                <a class="topnav-link" href="/">{% if lang == 'hi' %}होम{% else %}Home{% endif %}</a>
+                <a class="topnav-link active" href="/verify">{% if lang == 'hi' %}सत्यापन{% else %}Verify{% endif %}</a>
+                <a class="topnav-link" href="/dashboard">{% if lang == 'hi' %}डैशबोर्ड{% else %}Dashboard{% endif %}</a>
+                <a class="topnav-link" href="/search">{% if lang == 'hi' %}सार्वजनिक खोज{% else %}Public Search{% endif %}</a>
+            </nav>
+
+            <div class="topbar-actions">
+                <button class="tone-button" type="button" onclick="toggleLanguage()">
+                    {% if lang == 'hi' %}English{% else %}हिन्दी{% endif %}
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="flex flex-1 pt-20">
+        
+        <!-- Left Sidebar (Officer Context) -->
+        <aside class="w-72 bg-surface-container-lowest hidden lg:flex flex-col shadow-[20px_0_40px_rgba(26,35,126,0.03)] z-10 sticky top-20 h-[calc(100vh-5rem)]">
+            <div class="p-8 flex-1">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">{% if lang == 'hi' %}अधिकारी उपकरण{% else %}Officer Tools{% endif %}</h3>
+                <nav class="space-y-2">
+                    <a href="/dashboard" class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-low rounded-lg transition-colors font-medium">
+                        <span class="material-symbols-outlined">grid_view</span>
+                        {% if lang == 'hi' %}लेजर डैशबोर्ड{% else %}Ledger Dashboard{% endif %}
+                    </a>
+                    <a href="/verify" class="flex items-center gap-3 px-4 py-3 bg-primary-container/10 text-primary rounded-lg transition-colors font-bold">
+                        <span class="material-symbols-outlined">document_scanner</span>
+                        {% if lang == 'hi' %}OCR सत्यापन{% else %}OCR Verification{% endif %}
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-low rounded-lg transition-colors font-medium">
+                        <span class="material-symbols-outlined">gavel</span>
+                        {% if lang == 'hi' %}धारा 65B साक्ष्य{% else %}Sec 65B Evidence{% endif %}
+                    </a>
+                </nav>
+
+                <div class="mt-12">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">{% if lang == 'hi' %}सिस्टम स्थिति{% else %}System Status{% endif %}</h3>
+                    <div class="bg-surface-container-low p-4 rounded-xl flex items-center gap-3">
+                        <div class="w-2 h-2 rounded-full bg-tertiary-fixed animate-pulse"></div>
+                        <div>
+                            <p class="text-sm font-bold text-primary">{% if lang == 'hi' %}Gemma-4-31b-it{% else %}Gemma-4-31b-it{% endif %}</p>
+                            <p class="text-xs text-secondary">{% if lang == 'hi' %}मॉडल ऑनलाइन{% else %}Model Online{% endif %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Verification Area -->
+        <main class="flex-1 p-8 lg:p-12 overflow-y-auto">
+            <div class="max-w-6xl mx-auto space-y-8">
+                
+                <!-- Header -->
+                <div>
+                    <h1 class="text-3xl font-black text-primary tracking-tight mb-2">
+                        {% if lang == 'hi' %}दस्तावेज़ अंतर्ग्रहण और OCR{% else %}Document Ingestion & OCR{% endif %}
+                    </h1>
+                    <p class="text-secondary max-w-2xl">
+                        {% if lang == 'hi' %}भूमि रिकॉर्ड को सुरक्षित रूप से संसाधित करें। AI इंजन ULPIN, क्षेत्रफल और स्वामित्व निकालेगा, जबकि गोपनीयता परत स्वचालित रूप से संवेदनशील आधार डेटा को टोकनाइज़ करेगी।{% else %}Securely process land records. The AI engine will extract ULPIN, Area, and Ownership, while the privacy layer automatically tokenizes sensitive Aadhaar data.{% endif %}
+                    </p>
+                </div>
+
+                <!-- Two Column Grid for Upload and Analytics -->
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                    
+                    <!-- Upload Section -->
+                    <div class="bg-surface-container-lowest rounded-2xl p-8 shadow-[0_20px_40px_rgba(26,35,126,0.06)] flex flex-col h-full relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-gradient-to-br from-transparent to-primary/5 pointer-events-none"></div>
+                        
+                        <div class="flex items-center justify-between mb-6 relative z-10">
+                            <h2 class="text-xl font-bold text-primary">{% if lang == 'hi' %}सुरक्षित अपलोड{% else %}Secure Upload{% endif %}</h2>
+                            <span class="bg-surface-container-highest text-secondary text-xs font-bold px-3 py-1 rounded-full">DPDP Act Compliant</span>
+                        </div>
+
+                        <!-- Integration Form -->
+                        <form id="verify-upload-form" onsubmit="handleVerifySubmit(event)" enctype="multipart/form-data" class="flex-1 flex flex-col relative z-10">
+                            <div class="flex-1 border-2 border-dashed border-outline-variant hover:border-primary/50 bg-surface hover:bg-surface-container-low transition-colors rounded-xl flex flex-col items-center justify-center p-8 text-center cursor-pointer group-hover:shadow-inner relative" onclick="document.getElementById('ocr-file-upload').click()">
+                                
+                                <div class="w-16 h-16 bg-surface-container-lowest rounded-full shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                    <span class="material-symbols-outlined text-3xl text-primary">cloud_upload</span>
+                                </div>
+                                
+                                <h3 class="text-lg font-bold text-primary mb-1">{% if lang == 'hi' %}दस्तावेज़ यहाँ छोड़ें{% else %}Drop document here{% endif %}</h3>
+                                <p class="text-sm text-secondary mb-4">{% if lang == 'hi' %}या फ़ाइल चुनने के लिए क्लिक करें{% else %}Or click to select a file{% endif %}</p>
+                                <p class="text-xs text-slate-400 font-mono">PDF, PNG, JPG, TIFF (Max 8MB)</p>
+                                
+                                <input type="file" id="ocr-file-upload" name="file" class="hidden" accept=".pdf,.png,.jpg,.jpeg,.tiff,.bmp" required>
+                            </div>
+                            
+                            <button type="submit" id="verify-submit-btn" class="mt-6 w-full bg-gradient-to-r from-primary to-primary-container text-white py-4 rounded-xl font-bold tracking-wide shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined text-xl">document_scanner</span>
+                                {% if lang == 'hi' %}निष्कर्षण और हैश आरंभ करें{% else %}Initiate Extraction & Hash{% endif %}
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Confidence Analytics & JSON Panel -->
+                    <div class="space-y-8">
+                        
+                        <!-- Analytics -->
+                        <div class="bg-surface-container-lowest rounded-2xl p-8 shadow-[0_20px_40px_rgba(26,35,126,0.06)]">
+                            <h2 class="text-xl font-bold text-primary mb-6">{% if lang == 'hi' %}AI आत्मविश्वास विश्लेषण{% else %}AI Confidence Analytics{% endif %}</h2>
+                            
+                            <div class="space-y-5">
+                                <div>
+                                    <div class="flex justify-between text-sm font-bold mb-2">
+                                        <span class="text-secondary">ULPIN Detection</span>
+                                        <span id="conf-ulpin-text" class="text-tertiary-fixed font-black">--%</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container-highest rounded-full h-2">
+                                        <div id="conf-ulpin-bar" class="bg-tertiary-fixed h-2 rounded-full transition-all duration-1000" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm font-bold mb-2">
+                                        <span class="text-secondary">Area Extraction</span>
+                                        <span id="conf-area-text" class="text-tertiary-fixed font-black">--%</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container-highest rounded-full h-2">
+                                        <div id="conf-area-bar" class="bg-tertiary-fixed h-2 rounded-full transition-all duration-1000" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm font-bold mb-2">
+                                        <span class="text-secondary">Aadhaar Tokenization</span>
+                                        <span class="text-primary font-black">100% (Secured)</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container-highest rounded-full h-2">
+                                        <div class="bg-primary h-2 rounded-full" style="width: 100%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- JSON Extraction Panel -->
+                        <div class="bg-surface-container-highest rounded-2xl p-6 border border-outline-variant/30">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-xs font-bold text-secondary uppercase tracking-widest">{% if lang == 'hi' %}कच्चा पेलोड (JSON){% else %}Raw Payload (JSON){% endif %}</h3>
+                                <span class="material-symbols-outlined text-secondary text-sm">code</span>
+                            </div>
+                            <pre id="json-payload-panel" class="font-mono text-[0.7rem] text-primary overflow-x-auto bg-surface-container-lowest p-4 rounded-lg shadow-inner">
+{
+  "status": "pending_upload",
+  "data": {
+    "ulpin": null,
+    "owner_token": null,
+    "area": null,
+    "confidence": 0.0,
+    "hash": null
+  }
+}
+                            </pre>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Recent Ingestion List -->
+                <div class="bg-surface-container-lowest rounded-2xl shadow-[0_20px_40px_rgba(26,35,126,0.04)] overflow-hidden mt-8">
+                    <div class="p-6 border-b border-outline-variant/20 flex justify-between items-center bg-surface">
+                        <h2 class="text-lg font-bold text-primary">{% if lang == 'hi' %}हाल के अंतर्ग्रहण{% else %}Recent Ingestions{% endif %}</h2>
+                        <span class="text-xs font-bold text-secondary">{% if lang == 'hi' %}पिछले 24 घंटे{% else %}Last 24 Hours{% endif %}</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-surface-container-low text-secondary font-bold uppercase tracking-wider text-[0.65rem]">
+                                <tr>
+                                    <th class="px-6 py-4">{% if lang == 'hi' %}ULPIN{% else %}ULPIN{% endif %}</th>
+                                    <th class="px-6 py-4">{% if lang == 'hi' %}स्थिति{% else %}Status{% endif %}</th>
+                                    <th class="px-6 py-4">{% if lang == 'hi' %}हैश संदर्भ{% else %}Hash Ref{% endif %}</th>
+                                    <th class="px-6 py-4 text-right">{% if lang == 'hi' %}कार्रवाई{% else %}Action{% endif %}</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-ingestions-table" class="divide-y divide-outline-variant/10">
+                                <!-- Placeholder row -->
+                                <tr class="hover:bg-surface-container-low/50 transition-colors">
+                                    <td class="px-6 py-4 font-mono font-medium text-primary">--</td>
+                                    <td class="px-6 py-4"><span class="bg-surface-container-highest text-secondary px-2 py-1 rounded text-xs font-bold">{% if lang == 'hi' %}प्रतीक्षारत{% else %}Awaiting{% endif %}</span></td>
+                                    <td class="px-6 py-4 font-mono text-xs text-slate-400">--</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="text-primary hover:text-primary-container transition-colors" disabled><span class="material-symbols-outlined text-lg opacity-50">visibility</span></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}?v=1.3"></script>
+    <script>
+        async function handleVerifySubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const fileInput = document.getElementById('ocr-file-upload');
+            if (!fileInput.files.length) return;
+
+            const submitBtn = document.getElementById('verify-submit-btn');
+            const originalHTML = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span class="material-symbols-outlined text-xl animate-spin">refresh</span> Processing OCR...';
+            submitBtn.disabled = true;
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                // 1. Update JSON Panel
+                document.getElementById('json-payload-panel').textContent = JSON.stringify(data, null, 2);
+
+                // 2. Update Confidence Analytics if success
+                if(data.status === 'success' || data.status === 'exists' || data.status === 'flagged') {
+                    const confPercentage = (data.data.confidence * 100).toFixed(0) + '%';
+                    document.getElementById('conf-ulpin-bar').style.width = confPercentage;
+                    document.getElementById('conf-ulpin-text').textContent = confPercentage;
+                    document.getElementById('conf-area-bar').style.width = confPercentage;
+                    document.getElementById('conf-area-text').textContent = confPercentage;
+
+                    // 3. Inject into Recent Table
+                    const tbody = document.getElementById('recent-ingestions-table');
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-surface-container-low/50 transition-colors bg-tertiary-fixed/10';
+                    tr.innerHTML = `<td class="px-6 py-4 font-mono font-medium text-primary">${data.data.ulpin || '--'}</td><td class="px-6 py-4"><span class="bg-tertiary-fixed text-tertiary-container px-2 py-1 rounded text-xs font-bold">${data.status}</span></td><td class="px-6 py-4 font-mono text-xs text-slate-400">${data.data.hash ? data.data.hash.substring(0, 12) + '...' : '--'}</td><td class="px-6 py-4 text-right"><button class="text-primary hover:text-primary-container transition-colors"><span class="material-symbols-outlined text-lg">visibility</span></button></td>`;
+                    tbody.prepend(tr);
+                }
+            } catch (err) {
+                document.getElementById('json-payload-panel').textContent = JSON.stringify({ error: err.message }, null, 2);
+            } finally {
+                submitBtn.innerHTML = originalHTML;
+                submitBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

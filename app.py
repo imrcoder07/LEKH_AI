@@ -202,10 +202,15 @@ def dashboard():
     return render_template('dashboard.html', lang=session.get('lang', 'en'))
 
 
-@app.route('/records')
-def records():
+@app.route('/verify')
+def verify_page():
+    """Mission 4: OCR Verification UI."""
+    return render_template('verify.html', lang=session.get('lang', 'en'))
+
+@app.route('/search')
+def search():
     """Citizen Records Search UI."""
-    return render_template('records.html', lang=session.get('lang', 'en'))
+    return render_template('search.html', lang=session.get('lang', 'en'))
 
 
 @app.route('/api/records/<record_id>', methods=['GET'])

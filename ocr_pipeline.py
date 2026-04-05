@@ -1,6 +1,6 @@
 """
-ocr_pipeline.py — Hybrid OCR Ingestion Pipeline
-================================================
+ocr_pipeline.py — LLM-powered OCR Ingestion Pipeline
+=====================================================
 Mission 4: Lightweight + LLM-powered document processing
 
 Architecture:
@@ -13,15 +13,9 @@ Architecture:
   │  └──────┬──────┘    Local, fast, ~30MB package         │
   │         │                                               │
   │         ▼                                               │
-  │  ┌─────────────┐    pytesseract (Tesseract binary)     │
-  │  │ Local  OCR  │    Extracts raw text + confidence     │
-  │  │ (Tesseract) │    Tiny wrapper, no model downloads   │
-  │  └──────┬──────┘                                        │
-  │         │  raw_text + confidence                        │
-  │         ▼                                               │
   │  ┌─────────────────────────────────┐                   │
   │  │  Gemini Flash Vision API        │  FREE TIER        │
-  │  │  • Receives: image + raw_text   │  1500 req/day     │
+  │  │  • Receives: image               │  1500 req/day     │
   │  │  • Extracts: ULPIN, Aadhaar,    │  ~2MB package     │
   │  │    Area as structured JSON      │                   │
   │  │  • Handles: Hindi + English     │                   │
@@ -39,11 +33,9 @@ Architecture:
   └──────────────────────────────────────────────────────────┘
 
 Deployment footprint:
-  pytesseract          ~10 KB (Python wrapper only)
   opencv-headless      ~30 MB (no GUI)
   google-generativeai  ~2 MB
-  Tesseract binary     ~60 MB (system install, not in venv)
-  Total venv delta:    ~35 MB (vs ~500 MB for PaddlePaddle)
+  Total venv delta:    ~32 MB
 """
 
 import os
@@ -71,7 +63,6 @@ GEMINI_TIMEOUT_SECONDS = int(os.getenv("GEMINI_TIMEOUT_SECONDS", "20"))
 GEMINI_MAX_TIMEOUT_SECONDS = int(os.getenv("GEMINI_MAX_TIMEOUT_SECONDS", "120"))
 SUPABASE_TIMEOUT_SECONDS = int(os.getenv("SUPABASE_TIMEOUT_SECONDS", "15"))
 GEMMA_MODEL = os.getenv("GEMMA_MODEL", "gemma-4-31b-it")
-ENABLE_TESSERACT = os.getenv("ENABLE_TESSERACT", "false").strip().lower() in {"1", "true", "yes"}
 GEMMA_MAX_IMAGE_SIDE = int(os.getenv("GEMMA_MAX_IMAGE_SIDE", "1800"))
 GEMMA_RETRY_IMAGE_SIDE = int(os.getenv("GEMMA_RETRY_IMAGE_SIDE", "1280"))
 GEMMA_JPEG_QUALITY = int(os.getenv("GEMMA_JPEG_QUALITY", "85"))
@@ -246,66 +237,6 @@ def _gemma_attempt_plan(image_path: str) -> list[dict]:
         })
 
     return attempts
-
-
-# ---------------------------------------------------------------------------
-# Stage 2: Local OCR (pytesseract — fast, offline, confidence extraction)
-# ---------------------------------------------------------------------------
-
-def _get_tesseract_cmd() -> Optional[str]:
-    """Locate Tesseract binary. Tries common Windows install paths."""
-    candidates = [
-        r"C:\Program Files\Tesseract-OCR\tesseract.exe",
-        r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
-    ]
-    for path in candidates:
-        if os.path.exists(path):
-            return path
-    return None  # Assume it's on PATH
-
-
-def run_local_ocr(image: np.ndarray) -> dict:
-    """
-    Run Tesseract on preprocessed image.
-    Returns raw text and mean confidence score.
-
-    If Tesseract is not installed, returns empty text with 0 confidence.
-    Gemini Vision will still handle structured extraction independently.
-    """
-    try:
-        import pytesseract
-        from PIL import Image as PILImage
-
-        # Set path if needed (Windows)
-        tesseract_cmd = _get_tesseract_cmd()
-        if tesseract_cmd:
-            pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
-
-        pil_img = PILImage.fromarray(image)
-        # PSM 6 = single block of text; OEM 3 = default LSTM
-        config = "--psm 6 --oem 3"
-        data = pytesseract.image_to_data(
-            pil_img, lang="eng", config=config,
-            output_type=pytesseract.Output.DICT
-        )
-
-        words, confs = [], []
-        for i, conf in enumerate(data["conf"]):
-            if int(conf) > 0:
-                word = data["text"][i].strip()
-                if word:
-                    words.append(word)
-                    confs.append(int(conf) / 100.0)
-
-        raw_text = " ".join(words)
-        mean_conf = sum(confs) / len(confs) if confs else 0.0
-
-        logger.info(f"[Tesseract] {len(words)} words | confidence: {mean_conf:.2%}")
-        return {"raw_text": raw_text, "confidence": round(mean_conf, 4)}
-
-    except Exception as e:
-        logger.warning(f"[Tesseract] Not available or failed: {e}. Falling back to Gemma/regex.")
-        return {"raw_text": "", "confidence": 0.0}
 
 
 # ---------------------------------------------------------------------------
@@ -600,14 +531,9 @@ def process_document(image_path: str) -> dict:
         preprocessed = preprocess_image(image_path)
         cv2.imwrite(pre_path, preprocessed)
 
-        # Stage 2: Optional local OCR. In lightweight mode we rely on Gemma only.
-        if ENABLE_TESSERACT:
-            local_result = run_local_ocr(preprocessed)
-            raw_text = local_result["raw_text"]
-            confidence = local_result["confidence"]
-        else:
-            raw_text = ""
-            confidence = 0.0
+        # Stage 2: Local OCR removed - relying on Gemma only
+        raw_text = ""
+        confidence = 0.0
 
         # Stage 3: Hosted Gemma image extraction
         fields = run_gemma_extraction(image_path, raw_text)
@@ -617,8 +543,7 @@ def process_document(image_path: str) -> dict:
             os.remove(pre_path)
 
         # Confidence gate
-        # When Tesseract is absent (confidence=0.0), trust Gemma if key is configured.
-        # Gemma having successfully extracted fields is itself a quality signal.
+        # Rely on Gemma extraction quality signal.
         gemma_available = bool(
             os.getenv("GEMINI_API_KEY", "").strip()
             and os.getenv("GEMINI_API_KEY") != "your_gemini_api_key_here"
@@ -628,10 +553,7 @@ def process_document(image_path: str) -> dict:
             1 for key in ("ulpin", "aadhaar", "area") if fields.get(key)
         )
 
-        if ENABLE_TESSERACT and confidence > 0:
-            # Tesseract gave us a real confidence score — use it
-            effective_confidence = confidence
-        elif gemma_available and gemma_core_fields >= 3:
+        if gemma_available and gemma_core_fields >= 3:
             effective_confidence = 0.95
         elif gemma_available and gemma_core_fields == 2:
             effective_confidence = 0.88
@@ -651,7 +573,6 @@ def process_document(image_path: str) -> dict:
         if flagged:
             logger.warning(
                 f"[Pipeline] Flagged: conf={effective_confidence:.0%} "
-                f"tesseract={confidence:.2%} enabled={ENABLE_TESSERACT} "
                 f"gemma={gemma_available} extracted={gemma_extracted} core_fields={gemma_core_fields}"
             )
             return {
@@ -725,8 +646,8 @@ if __name__ == "__main__":
     from PIL import Image, ImageDraw
 
     print("=" * 60)
-    print("  Hybrid OCR Pipeline Self-Test")
-    print("  (pytesseract + Gemini Flash Vision)")
+    print("  OCR Pipeline Self-Test")
+    print("  (Gemini Flash Vision)")
     print("=" * 60)
 
     # Create synthetic land record image
@@ -746,28 +667,22 @@ if __name__ == "__main__":
 
     print(f"\n[1] Test image: {tmp}")
 
-    # Stage 2: Local OCR
-    preprocessed = preprocess_image(tmp)
-    local = run_local_ocr(preprocessed)
-    print(f"\n[2] Tesseract confidence: {local['confidence']:.2%}")
-    print(f"    Raw text sample: {local['raw_text'][:100]}")
-
-    # Stage 3: Gemini (will use regex fallback if key not set)
-    fields = run_gemma_extraction(tmp, local["raw_text"])
-    print(f"\n[3] Extracted fields:")
+    # Stage 2: Gemini extraction (no local OCR)
+    fields = run_gemma_extraction(tmp, "")
+    print(f"\n[2] Extracted fields:")
     for k, v in fields.items():
         print(f"    {k:20}: {v}")
 
-    # Stage 4: Ghost Identity check (no DB write in test)
+    # Stage 3: Ghost Identity check (no DB write in test)
     aadhaar = fields.get("aadhaar")
     if aadhaar and len(str(aadhaar)) == 12:
         from adv_crypto import generate_reference_token
         token = generate_reference_token(str(aadhaar))
         assert str(aadhaar) not in token, "Aadhaar visible in token!"
-        print(f"\n[4] Ghost Identity: Aadhaar → {token}")
+        print(f"\n[3] Ghost Identity: Aadhaar → {token}")
         print("    ✅ Raw Aadhaar NOT in token")
     else:
-        print(f"\n[4] Could not find valid Aadhaar (got '{aadhaar}') — add GEMINI_API_KEY for full accuracy")
+        print(f"\n[3] Could not find valid Aadhaar (got '{aadhaar}') — add GEMINI_API_KEY for full accuracy")
 
     os.remove(tmp)
     print("\n" + "=" * 60)

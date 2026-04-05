@@ -78,7 +78,6 @@ def _runtime_health_payload():
         "gemini_api_key_present": bool(os.getenv("GEMINI_API_KEY", "").strip()),
         "gemma_model_env": os.getenv("GEMMA_MODEL"),
         "gemini_timeout_env": os.getenv("GEMINI_TIMEOUT_SECONDS"),
-        "enable_tesseract_env": os.getenv("ENABLE_TESSERACT"),
     }
 
     try:
@@ -88,7 +87,6 @@ def _runtime_health_payload():
             "gemma_model": getattr(ocr_pipeline, "GEMMA_MODEL", None),
             "gemini_timeout_seconds": getattr(ocr_pipeline, "GEMINI_TIMEOUT_SECONDS", None),
             "gemini_max_timeout_seconds": getattr(ocr_pipeline, "GEMINI_MAX_TIMEOUT_SECONDS", None),
-            "enable_tesseract": getattr(ocr_pipeline, "ENABLE_TESSERACT", None),
             "gemma_max_image_side": getattr(ocr_pipeline, "GEMMA_MAX_IMAGE_SIDE", None),
             "gemma_retry_image_side": getattr(ocr_pipeline, "GEMMA_RETRY_IMAGE_SIDE", None),
             "gemma_jpeg_quality": getattr(ocr_pipeline, "GEMMA_JPEG_QUALITY", None),
@@ -147,7 +145,7 @@ def api_health():
 def api_upload():
     """
     Mission 4: OCR Ingestion Pipeline
-    Officer Upload → Hybrid OCR (Tesseract + Gemma) → Extract → Confidence Check
+    Officer Upload → LLM-powered OCR (Gemma) → Extract → Confidence Check
     → Vault (AES-256-GCM) → Supabase → Secure Delete
     """
     if request.method == 'GET':

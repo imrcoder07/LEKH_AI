@@ -27,6 +27,7 @@
 
             <nav class="topnav">
                 <a class="topnav-link" href="/">{% if lang == 'hi' %}होम{% else %}Home{% endif %}</a>
+                <a class="topnav-link" href="/verify">{% if lang == 'hi' %}OCR सत्यापन{% else %}OCR Verify{% endif %}</a>
                 <a class="topnav-link active" href="/dashboard">{% if lang == 'hi' %}डैशबोर्ड{% else %}Dashboard{% endif %}</a>
             </nav>
 
@@ -34,12 +35,9 @@
                 <button class="tone-button" type="button" onclick="toggleLanguage()">
                     {% if lang == 'hi' %}English{% else %}हिन्दी{% endif %}
                 </button>
-                <button class="tone-button" type="button" onclick="openDpdpModal()" style="margin-right: 0.5rem;">
+                <a class="tone-button" href="/verify" style="text-decoration: none; display: inline-block; margin-right: 0.5rem;">
                     {% if lang == 'hi' %}नया रिकॉर्ड अपलोड करें{% else %}Upload New Record{% endif %}
-                </button>
-                <button class="tone-button" type="button" onclick="openDpdpModal()">
-                    {% if lang == 'hi' %}नया रिकॉर्ड अपलोड करें{% else %}Upload New Record{% endif %}
-                </button>
+                </a>
                 <button class="primary-button" type="button" onclick="runVerification()">
                     {% if lang == 'hi' %}लेजर सत्यापित करें{% else %}Verify Ledger{% endif %}
                 </button>
@@ -80,14 +78,28 @@
             </div>
         </section>
 
-        <section class="feature-section">
-            <div id="records-grid" class="feature-grid">
-                <!-- Verification blocks will be injected here by JS -->
-                <article class="feature-card feature-card-wide" id="loading-card">
-                    <div class="feature-icon">⏳</div>
-                    <h2>{% if lang == 'hi' %}डेटा लोड हो रहा है...{% else %}Loading Data...{% endif %}</h2>
-                    <p>{% if lang == 'hi' %}SHA-256 ब्लॉकचेन अखंडता को मान्य किया जा रहा है।{% else %}Validating SHA-256 blockchain integrity.{% endif %}</p>
-                </article>
+        <section class="feature-section max-w-7xl mx-auto px-8 w-full" style="margin-top: 2rem; margin-bottom: 4rem;">
+            <div class="bg-surface-container-lowest rounded-2xl shadow-[0_20px_40px_rgba(26,35,126,0.08)] overflow-hidden w-full p-8">
+                <div class="mb-6 flex flex-col gap-1">
+                    <h2 class="text-xl font-black text-primary">{% if lang == 'hi' %}क्रिप्टोग्राफिक लेजर लॉग{% else %}Cryptographic Ledger Logs{% endif %}</h2>
+                    <span class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest">{% if lang == 'hi' %}अपरिवर्तनीय रिकॉर्ड{% else %}Immutable Records{% endif %}</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm border-separate border-spacing-y-3">
+                        <thead class="text-secondary font-bold uppercase tracking-wider text-[0.65rem]">
+                            <tr>
+                                <th class="px-6 py-3">{% if lang == 'hi' %}स्थिति{% else %}Status{% endif %}</th>
+                                <th class="px-6 py-3">{% if lang == 'hi' %}ULPIN{% else %}ULPIN{% endif %}</th>
+                                <th class="px-6 py-3">{% if lang == 'hi' %}समय{% else %}Timestamp{% endif %}</th>
+                                <th class="px-6 py-3">{% if lang == 'hi' %}हैश / टोकन{% else %}Hash / Token{% endif %}</th>
+                                <th class="px-6 py-3 text-right">{% if lang == 'hi' %}कार्रवाई{% else %}Action{% endif %}</th>
+                            </tr>
+                        </thead>
+                        <tbody id="records-tbody">
+                            <!-- Table rows will be injected here by JS -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
     </main>
@@ -253,12 +265,111 @@
 
     <script src="{{ url_for('static', filename='js/app.js') }}?v=1.3"></script>
     <script>
-        // Auto-run verification on dashboard load
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof runVerification === 'function') {
-                runVerification();
+        // Independent Dashboard Data Fetcher
+        window.runVerification = async function() {
+            const tbody = document.getElementById('records-tbody');
+            const statusInd = document.getElementById('status-indicator');
+            const totalCount = document.getElementById('total-records-count');
+            const lastHash = document.getElementById('last-block-hash');
+
+            if (!tbody) return;
+
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="px-6 py-12 text-center text-secondary bg-surface-container-lowest rounded-xl">
+                        <div class="flex flex-col items-center justify-center"><span class="material-symbols-outlined text-4xl mb-2 animate-spin text-primary">refresh</span><p class="font-medium mt-2">{% if lang == 'hi' %}डेटा लोड हो रहा है...{% else %}Loading Data...{% endif %}</p></div>
+                    </td>
+                </tr>
+            `;
+
+            try {
+                // Set session to admin to ensure Officer-level API access
+                await fetch('/api/demo/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ role: 'admin' })
+                });
+
+                const res = await fetch('/api/verify');
+                const data = await res.json();
+
+                if (data.status === 'ERROR') {
+                    throw new Error(data.error || 'Unknown server error');
+                }
+
+                statusInd.textContent = data.status;
+                statusInd.style.color = data.status === 'INTACT' ? '#a3f69c' : '#ba1a1a';
+                totalCount.textContent = data.total;
+
+                if (data.chain && data.chain.length > 0) {
+                    const lastBlock = data.chain[data.chain.length - 1];
+                    lastHash.textContent = lastBlock.stored_hash.substring(0, 12) + '...';
+
+                    tbody.innerHTML = '';
+                    
+                    data.chain.slice().reverse().forEach(block => {
+                        const isOk = block.status === 'OK';
+                        
+                        const statusChip = isOk 
+                            ? `<div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-tertiary-fixed text-on-tertiary-fixed rounded-full text-xs font-bold shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-fixed animate-pulse"></span>OK</div>`
+                            : `<div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-error-container text-error rounded-full text-xs font-bold shadow-sm"><span class="material-symbols-outlined text-[0.8rem]">error</span>HASH_MISMATCH</div>`;
+                        
+                        const dateObj = new Date(block.timestamp);
+                        const formattedDate = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ' • ' + dateObj.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+
+                        const tr = document.createElement('tr');
+                        tr.className = 'bg-surface-container-lowest hover:bg-surface-container-high transition-all duration-200 group';
+                        tr.innerHTML = `
+                            <td class="px-6 py-4 rounded-l-xl font-bold ${isOk ? 'text-tertiary-fixed' : 'text-error'}">${statusChip}</td>
+                            <td class="px-6 py-4 font-bold text-primary tracking-wide">${block.ulpin}</td>
+                            <td class="px-6 py-4 text-xs font-medium text-secondary">${formattedDate}</td>
+                            <td class="px-6 py-4 font-mono text-[0.75rem]">
+                                <div class="flex flex-col gap-1">
+                                    <div title="Prev: ${block.previous_hash}"><span class="text-slate-400 text-[0.65rem] uppercase tracking-widest mr-1">Hash</span><span class="font-bold text-primary">${block.stored_hash.substring(0, 16)}...</span></div>
+                                    <div class="opacity-80"><span class="text-slate-400 text-[0.65rem] uppercase tracking-widest mr-1">Tokn</span><span class="font-bold text-primary">${block.owner_token.substring(0, 12)}...</span></div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-right rounded-r-xl">
+                                <button onclick="generateCert('${block.record_id}')" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary hover:bg-primary-container active:scale-95 text-white text-xs font-bold rounded-lg transition-all border-none cursor-pointer shadow-sm hover:shadow-md">
+                                    <span class="material-symbols-outlined text-[1rem]">gavel</span>
+                                    {% if lang == 'hi' %}65B बनाएं{% else %}Generate 65B{% endif %}
+                                </button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    lastHash.textContent = 'GENESIS';
+                    tbody.innerHTML = `
+                        <tr class="bg-surface-container-lowest rounded-xl"><td colspan="5" class="px-6 py-12 text-center text-secondary rounded-xl"><span class="material-symbols-outlined text-4xl mb-2 opacity-50">inbox</span><h2 class="text-lg text-primary font-bold mb-1">{% if lang == 'hi' %}लेजर खाली है{% else %}Ledger is Empty{% endif %}</h2><p class="text-sm">{% if lang == 'hi' %}अभी तक कोई रिकॉर्ड नहीं डाला गया है।{% else %}No records have been ingested yet.{% endif %}</p></td></tr>
+                    `;
+                }
+            } catch (err) {
+                console.error(err);
+                statusInd.textContent = 'ERROR';
+                statusInd.style.color = '#ba1a1a';
+                tbody.innerHTML = `
+                    <tr class="bg-error-container/20 rounded-xl"><td colspan="5" class="px-6 py-12 text-center text-error rounded-xl"><span class="material-symbols-outlined text-4xl mb-2">error</span><h2 class="text-lg font-bold mb-1">Verification Failed</h2><p class="text-sm">${err.message}</p></td></tr>
+                `;
             }
-        });
+        };
+
+        window.generateCert = async function(recordId) {
+            try {
+                const res = await fetch(`/api/legal/${recordId}/certificate`);
+                const data = await res.json();
+                if (data.status === 'success') {
+                    document.getElementById('certificate-content').textContent = data.data.certificate_text;
+                    document.getElementById('legal-modal').style.display = 'flex';
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (err) {
+                alert('Failed to generate certificate.');
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', window.runVerification);
     </script>
 </body>
 </html>
